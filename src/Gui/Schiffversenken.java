@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  *
  * @author Lukas
  */
-public class Schiffversenken extends JFrame implements ActionListener, MouseListener{
+public class Schiffversenken extends JFrame implements ActionListener, MouseListener {
 
     private JMenuBar mBar = new JMenuBar();
     private JMenu mFile = new JMenu("File");
@@ -42,7 +42,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JMenuItem mNetClient = new JMenuItem("Mit Host verbinden");
     private JMenuItem mExit = new JMenuItem("Exit");
     private JMenuItem mAbout = new JMenuItem("About");
-    
+
     private JLabel player1 = new JLabel();
     private JLabel player2 = new JLabel();
     private JLabel Titel1 = new JLabel();
@@ -53,43 +53,42 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel rightPanel = new JPanel();
     private Field butLeft[][];
     private Field butRight[][];
-    
+
     private int fieldSize = 10;
 
-    
-    public Schiffversenken(){ 
+    public Schiffversenken() {
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800,800);
+        setSize(800, 800);
         setLayout(new GridLayout(2, 2));
-        this.butLeft = new Field[fieldSize] [fieldSize];
-        this.butRight = new Field[fieldSize] [fieldSize];
-        
+        this.butLeft = new Field[fieldSize][fieldSize];
+        this.butRight = new Field[fieldSize][fieldSize];
+
         mNewLocal.add(mLocalHuman);
         mNewLocal.add(mLocalComp);
         mNewNet.add(mNetHost);
         mNewNet.add(mNetClient);
         mFile.add(mNewLocal);
         mFile.add(mNewNet);
-        
+
         mFile.addSeparator();
-        
+
         mFile.add(mExit);
-        
+
         mBar.add(mFile);
-        
+
         mHelp.add(mAbout);
         mBar.add(mHelp);
-        
+
         setJMenuBar(mBar);
-        
+
         mExit.addActionListener(this);
         mAbout.addActionListener(this);
         mLocalHuman.addActionListener(this);
         mLocalComp.addActionListener(this);
         mNetHost.addActionListener(this);
         mNetClient.addActionListener(this);
-        
+
         add(leftTopPanel);
         add(rightTopPanel);
         add(leftPanel);
@@ -99,32 +98,30 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         rightPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));
         leftTopPanel.setLayout(new BorderLayout());
         rightTopPanel.setLayout(new BorderLayout());
-        
+
         leftTopPanel.add(Titel1, BorderLayout.NORTH);
         Titel1.setText("SCHIFFE");
         Titel1.setFont(Titel1.getFont().deriveFont(40.0f));
         Titel1.setHorizontalAlignment(JLabel.RIGHT);
-        
+
         rightTopPanel.add(Titel2, BorderLayout.NORTH);
         Titel2.setText("VERSENKEN");
         Titel2.setFont(Titel1.getFont().deriveFont(40.0f));
         Titel2.setHorizontalAlignment(JLabel.LEFT);
-        
-        leftTopPanel.add(player1, BorderLayout.SOUTH );
+
+        leftTopPanel.add(player1, BorderLayout.SOUTH);
         player1.setText("Player 1");
         player1.setFont(Titel1.getFont().deriveFont(25.0f));
         player1.setHorizontalAlignment(JLabel.CENTER);
-        
-        rightTopPanel.add(player2, BorderLayout.SOUTH );
+
+        rightTopPanel.add(player2, BorderLayout.SOUTH);
         player2.setText("Player 2");
         player2.setFont(Titel1.getFont().deriveFont(25.0f));
         player2.setHorizontalAlignment(JLabel.CENTER);
-        
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                boolean leftField = true;
-                butLeft[col][row] = new Field (col, row, leftField);
+                butLeft[col][row] = new Field(col, row);
                 butLeft[col][row].getButton().addMouseListener(this);
                 butLeft[col][row].getButton().setBackground(Color.white);
                 leftPanel.add(butLeft[col][row].getButton());
@@ -133,8 +130,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                boolean rightField = false;
-                butRight[col][row] = new Field(col, row, rightField);
+                butRight[col][row] = new Field(col, row);
                 butRight[col][row].getButton().addMouseListener(this);
                 butRight[col][row].getButton().setBackground(Color.blue);
                 rightPanel.add(butRight[col][row].getButton());
@@ -146,24 +142,24 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == mExit){
+        if (e.getSource() == mExit) {
             System.exit(0);
         }
-        if(e.getSource() == mAbout){
+        if (e.getSource() == mAbout) {
             JOptionPane.showMessageDialog(this, "Copyright 2015 Hochschule Luzern, Technik & Architektur");
         }
-        if(e.getSource() == mLocalHuman){
+        if (e.getSource() == mLocalHuman) {
             JOptionPane.showMessageDialog(this, "Not implementet right now");
         }
-        if(e.getSource() == mLocalComp){
+        if (e.getSource() == mLocalComp) {
             JOptionPane.showMessageDialog(this, "Not implementet right now");
         }
-        if(e.getSource() == mNetHost){
+        if (e.getSource() == mNetHost) {
             NetworkHost dialog = new NetworkHost(this, "Warte auf Spieler");
             ServerThread server = new ServerThread(dialog);
-            
+
             server.start();
-            
+
             dialog.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -171,18 +167,18 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     dialog.setVisible(false);
                 }
             });
-            
+
             dialog.setVisible(true);
         }
-        if(e.getSource() == mNetClient){
+        if (e.getSource() == mNetClient) {
             String hostname = JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
-            
-            if(!hostname.equals("")){
+
+            if (!hostname.equals("")) {
                 NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
                 ClientThread client = new ClientThread(hostname, dialog);
-                
+
                 client.start();
-                
+
                 dialog.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -190,14 +186,15 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                         dialog.setVisible(false);
                     }
                 });
-                
+
                 dialog.setVisible(true);
             }
         }
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
-       
+
     }
 
     @Override
@@ -212,21 +209,18 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Field clickedField;
-         for (int row = 0; row < fieldSize; row++) {
+        for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                if(butLeft[col][row].getButton() == e.getComponent()){
-                    clickedField = new Field (col, row, true);
-                    System.out.println("You clicked on the left Field: X=" + clickedField.getX()+" Y="+ clickedField.getY());
+                if (butLeft[col][row].getButton() == e.getComponent()) {
+                    System.out.println("You clicked on the left Field: X=" + butLeft[col][row].getX() + " Y=" + butLeft[col][row].getY());
                     e.getComponent().setBackground(Color.black);
                 }
-                if(butRight[col][row].getButton() == e.getComponent()){
-                    clickedField = new Field (col, row, false);
-                    System.out.println("You clicked on the right Field: X=" + clickedField.getX()+" Y="+ clickedField.getY());
+                if (butRight[col][row].getButton() == e.getComponent()) {
+                    System.out.println("You clicked on the right Field: X=" + butRight[col][row].getX() + " Y=" + butRight[col][row].getY());
                     e.getComponent().setBackground(Color.red);
                 }
             }
-         }
+        }
     }
 
     @Override
