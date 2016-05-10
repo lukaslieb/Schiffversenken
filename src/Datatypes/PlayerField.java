@@ -9,7 +9,7 @@ package Datatypes;
  *
  * @author Lukas
  */
-public enum Field {
+public enum PlayerField {
     ENEMY,
     OWN;
 }
