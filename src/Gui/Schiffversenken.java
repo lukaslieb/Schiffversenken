@@ -51,9 +51,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel rightTopPanel = new JPanel();
     private JPanel leftPanel = new JPanel();
     private JPanel rightPanel = new JPanel();
-    private JButton butLeft[][] = new JButton[10][10];
-    private JButton butRight[][] = new JButton[10][10];
-    private ArrayList<JButton> left = new ArrayList<JButton>();
+    private Field butLeft[][];
+    private Field butRight[][];
+    
+    private int fieldSize = 10;
 
     
     public Schiffversenken(){ 
@@ -61,6 +62,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800,800);
         setLayout(new GridLayout(2, 2));
+        this.butLeft = new Field[fieldSize] [fieldSize];
+        this.butRight = new Field[fieldSize] [fieldSize];
         
         mNewLocal.add(mLocalHuman);
         mNewLocal.add(mLocalComp);
@@ -92,8 +95,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         add(leftPanel);
         add(rightPanel);
 
-        leftPanel.setLayout(new GridLayout(10, 10, 0, 0));
-        rightPanel.setLayout(new GridLayout(10, 10, 0, 0));
+        leftPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));
+        rightPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));
         leftTopPanel.setLayout(new BorderLayout());
         rightTopPanel.setLayout(new BorderLayout());
         
@@ -118,22 +121,23 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         player2.setHorizontalAlignment(JLabel.CENTER);
         
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                butLeft[row][col] = new JButton();
-                butLeft[row][col].addMouseListener(this);
-                butLeft[row][col].setBackground(Color.white);
-                leftPanel.add(butLeft[row][col]);
-                left.add(butLeft[row][col]);
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                boolean leftField = true;
+                butLeft[col][row] = new Field (col, row, leftField);
+                butLeft[col][row].getButton().addMouseListener(this);
+                butLeft[col][row].getButton().setBackground(Color.white);
+                leftPanel.add(butLeft[col][row].getButton());
             }
         }
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                butRight[row][col] = new JButton();
-                butRight[row][col].addMouseListener(this);
-                butRight[row][col].setBackground(Color.blue);
-                rightPanel.add(butRight[row][col]);
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                boolean rightField = false;
+                butRight[col][row] = new Field(col, row, rightField);
+                butRight[col][row].getButton().addMouseListener(this);
+                butRight[col][row].getButton().setBackground(Color.blue);
+                rightPanel.add(butRight[col][row].getButton());
             }
         }
 
@@ -193,12 +197,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (left.contains(e.getComponent())) {
-            e.getComponent().setBackground(Color.black);
-        }
-        else{
-            e.getComponent().setBackground(Color.red);
-        }
+       
     }
 
     @Override
@@ -213,7 +212,21 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        Field clickedField;
+         for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if(butLeft[col][row].getButton() == e.getComponent()){
+                    clickedField = new Field (col, row, true);
+                    System.out.println("You clicked on the left Field: X=" + clickedField.getX()+" Y="+ clickedField.getY());
+                    e.getComponent().setBackground(Color.black);
+                }
+                if(butRight[col][row].getButton() == e.getComponent()){
+                    clickedField = new Field (col, row, false);
+                    System.out.println("You clicked on the right Field: X=" + clickedField.getX()+" Y="+ clickedField.getY());
+                    e.getComponent().setBackground(Color.red);
+                }
+            }
+         }
     }
 
     @Override
