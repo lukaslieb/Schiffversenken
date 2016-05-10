@@ -51,8 +51,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel rightTopPanel = new JPanel();
     private JPanel leftPanel = new JPanel();
     private JPanel rightPanel = new JPanel();
-    private Field butLeft[][];
-    private Field butRight[][];
+    private Field[][] fieldLeft;
+    private Field[][] fieldRight;
 
     private int fieldSize = 10;
 
@@ -61,8 +61,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 800);
         setLayout(new GridLayout(2, 2));
-        this.butLeft = new Field[fieldSize][fieldSize];
-        this.butRight = new Field[fieldSize][fieldSize];
+        this.fieldLeft = new Field[fieldSize][fieldSize];
+        this.fieldRight = new Field[fieldSize][fieldSize];
 
         mNewLocal.add(mLocalHuman);
         mNewLocal.add(mLocalComp);
@@ -121,19 +121,19 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                butLeft[col][row] = new Field(col, row);
-                butLeft[col][row].getButton().addMouseListener(this);
-                butLeft[col][row].getButton().setBackground(Color.white);
-                leftPanel.add(butLeft[col][row].getButton());
+                fieldLeft[col][row] = new Field(col, row);
+                fieldLeft[col][row].getButton().addMouseListener(this);
+                fieldLeft[col][row].getButton().setBackground(Color.white);
+                leftPanel.add(fieldLeft[col][row].getButton());
             }
         }
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                butRight[col][row] = new Field(col, row);
-                butRight[col][row].getButton().addMouseListener(this);
-                butRight[col][row].getButton().setBackground(Color.blue);
-                rightPanel.add(butRight[col][row].getButton());
+                fieldRight[col][row] = new Field(col, row);
+                fieldRight[col][row].getButton().addMouseListener(this);
+                fieldRight[col][row].getButton().setBackground(Color.blue);
+                rightPanel.add(fieldRight[col][row].getButton());
             }
         }
 
@@ -211,13 +211,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     public void mouseReleased(MouseEvent e) {
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                if (butLeft[col][row].getButton() == e.getComponent()) {
-                    System.out.println("You clicked on the left Field: X=" + butLeft[col][row].getX() + " Y=" + butLeft[col][row].getY());
-                    e.getComponent().setBackground(Color.black);
+                if (fieldLeft[col][row].getButton() == e.getComponent()) {
+                    System.out.println("You clicked on the left Field: X=" + fieldLeft[col][row].getX() + " Y=" + fieldLeft[col][row].getY());
+                    fieldLeft[col][row].getButton().setBackground(Color.black);
                 }
-                if (butRight[col][row].getButton() == e.getComponent()) {
-                    System.out.println("You clicked on the right Field: X=" + butRight[col][row].getX() + " Y=" + butRight[col][row].getY());
-                    e.getComponent().setBackground(Color.red);
+                if (fieldRight[col][row].getButton() == e.getComponent()) {
+                    System.out.println("You clicked on the right Field: X=" + fieldRight[col][row].getX() + " Y=" + fieldRight[col][row].getY());
+                    fieldRight[col][row].getButton().setBackground(Color.red);
                 }
             }
         }
