@@ -51,15 +51,15 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel rightTopPanel = new JPanel();
     private JPanel leftPanel = new JPanel();
     private JPanel rightPanel = new JPanel();
-    private JButton butLeft[][] = new JButton[5][5];
-    private JButton butRight[][] = new JButton[5][5];
+    private JButton butLeft[][] = new JButton[10][10];
+    private JButton butRight[][] = new JButton[10][10];
     private ArrayList<JButton> left = new ArrayList<JButton>();
 
     
     public Schiffversenken(){ 
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(700,600);
+        setSize(800,800);
         setLayout(new GridLayout(2, 2));
         
         mNewLocal.add(mLocalHuman);
@@ -92,18 +92,18 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         add(leftPanel);
         add(rightPanel);
 
-        leftPanel.setLayout(new GridLayout(5, 5, 0, 0));
-        rightPanel.setLayout(new GridLayout(5, 5, 0, 0));
+        leftPanel.setLayout(new GridLayout(10, 10, 0, 0));
+        rightPanel.setLayout(new GridLayout(10, 10, 0, 0));
         leftTopPanel.setLayout(new BorderLayout());
         rightTopPanel.setLayout(new BorderLayout());
         
         leftTopPanel.add(Titel1, BorderLayout.NORTH);
-        Titel1.setText("SCHIFFE    ");
+        Titel1.setText("SCHIFFE");
         Titel1.setFont(Titel1.getFont().deriveFont(40.0f));
         Titel1.setHorizontalAlignment(JLabel.RIGHT);
         
         rightTopPanel.add(Titel2, BorderLayout.NORTH);
-        Titel2.setText("   VERSENKEN");
+        Titel2.setText("VERSENKEN");
         Titel2.setFont(Titel1.getFont().deriveFont(40.0f));
         Titel2.setHorizontalAlignment(JLabel.LEFT);
         
@@ -118,8 +118,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         player2.setHorizontalAlignment(JLabel.CENTER);
         
 
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 5; col++) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
                 butLeft[row][col] = new JButton();
                 butLeft[row][col].addMouseListener(this);
                 butLeft[row][col].setBackground(Color.white);
@@ -128,8 +128,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             }
         }
 
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 5; col++) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
                 butRight[row][col] = new JButton();
                 butRight[row][col].addMouseListener(this);
                 butRight[row][col].setBackground(Color.blue);
