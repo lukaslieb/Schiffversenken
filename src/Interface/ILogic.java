@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 package Interface;
+import Logic.Ship;
 
 /**
  * This interface define the Methods how communicate with the logic.
  * @author Lukas
  */
-public interface ILogik {
+public interface ILogic {
     /**
      * This method tells the logic on witch field the player has shoot.
      * @param x = x coordinate of the field
@@ -17,4 +18,11 @@ public interface ILogik {
      * @return true if the shoot was acceptet from the logic
      */
     boolean shoot(int x, int y);
+    
+    /**
+     * Set the ship to the coordinates witch the player choose.
+     * @param ship
+     * @return true if the ship was acceptet at this place.
+     */
+    boolean setShip(Ship ship);
 }

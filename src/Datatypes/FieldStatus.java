@@ -15,10 +15,11 @@ public enum FieldStatus {
     WATER,
     SHIP,
     HIT,
-    DESTROYED;
+    DESTROYED,
+    UNKNOWNAREA;
     
     public Color getColor(){
-        Color color = Color.WHITE;
+        Color color;
         switch (this){
             case WATER:
                 color = Color.BLUE;
@@ -32,6 +33,8 @@ public enum FieldStatus {
             case DESTROYED:
                 color = Color.GRAY;
                 break;
+            default:
+                color = Color.WHITE;
                 
         }
         return color;

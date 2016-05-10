@@ -5,19 +5,25 @@
  */
 package Interface;
 import Datatypes.FieldStatus;
+import Datatypes.Field;
 
 /**
  * This interface define the methods how communicate with the Spielfeld Gui.
  * @author Lukas
  */
-public interface ISpielfeld {
+public interface IPlayingField {
     /**
      * Method for updating the actual Field. 
      * @param x = x Coordinate of Field
      * @param y = y Coordinate of Field
+     * @param field = ENEMY or OWN
      * @param status = status of Field (enum FieldStatus)
      */
-    void updateField(int x, int y, FieldStatus status); 
+    void updateField(int x, int y, Field field, FieldStatus status); 
     
-    
+    /**
+     * This function tells the Playfield if the local player has won.
+     * @param won -> true = won, false = lose
+     */
+    void gameOver(boolean won);
 }
