@@ -5,6 +5,7 @@
  */
 package Gui;
 
+import Datatypes.Constant;
 import Network.ClientThread;
 import Network.ServerThread;
 import java.awt.BorderLayout;
@@ -54,7 +55,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private Field[][] fieldLeft;
     private Field[][] fieldRight;
 
-    private int fieldSize = 10;
+    private int fieldSize = Constant.fieldSize;
 
     public Schiffversenken() {
         super();

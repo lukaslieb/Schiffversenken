@@ -7,9 +7,10 @@ package Datatypes;
 
 /**
  *
- * @author Lukas
+ * @author Sandro
  */
-public enum Field {
-    ENEMY,
-    OWN;
+public class Constant {
+    public static final int fieldSize = 10;
+    public static final int port = 1337;
+    
 }
