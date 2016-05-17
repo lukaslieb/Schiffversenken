@@ -66,6 +66,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel rightPanel = new JPanel();
     private Field[][] fieldLeft;
     private Field[][] fieldRight;
+    private int shipNumbers;
 
     private boolean setShips;
 
@@ -83,6 +84,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         this.fieldLeft = new Field[fieldSize][fieldSize];
         this.fieldRight = new Field[fieldSize][fieldSize];
         this.setShips = true;
+        this.shipNumbers = 0;
 
         mNewNet.add(mNetHost);
         mNewNet.add(mNetClient);
@@ -262,22 +264,23 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        ShipAlignment sa = ShipAlignment.HORIZONTAL;
+        ShipAlignment sa = null;
+
         if (e.getComponent() == vertikal) {
             sa = ShipAlignment.VERTICAL;
         } else if (e.getComponent() == horizontal) {
             sa = ShipAlignment.HORIZONTAL;
         }
+
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
                 if (fieldLeft[col][row].getButton() == e.getComponent()) {
                     if (setShips) {
-                        int count = 1;
-
-                        for (int i = 10; i > 0; i--) {
-
+                        logic.setShip(col, row, sa, shipNumbers);
+                        shipNumbers++;
+                        if (shipNumbers == 10) {
+                            setShips = false;
                         }
-
                     } else {
                         logic.shoot(row, col);
                     }
