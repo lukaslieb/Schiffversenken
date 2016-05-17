@@ -34,7 +34,7 @@ public class Network implements INetwork, IEnemy{
     }
     
     @Override
-    public boolean startClient(String hosthame, JDialog dialog) {
+    public boolean startClient(String hostname, JDialog dialog) {
         this.hostname = hostname;
         try{
             client = new ClientThread(hostname, dialog, this);

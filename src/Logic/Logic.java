@@ -78,8 +78,11 @@ public class Logic implements ILogic,ILogicEnemy{
         if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
             AmZug = true;
         }
-        if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
+        else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
             AmZug = true;
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
+        }
+        else{
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
         }
     }

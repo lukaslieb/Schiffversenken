@@ -5,18 +5,15 @@
  */
 package Gui;
 
-import javax.swing.JOptionPane;
 import Datatypes.Constant;
 import Datatypes.FieldStatus;
 import Datatypes.PlayerField;
 import Datatypes.ShipAlignment;
-import Interface.IEnemy;
 import Interface.ILogic;
 import Interface.INetwork;
 import Interface.IPlayingField;
-import Network.ClientThread;
+import Logic.Logic;
 import Network.Network;
-import Network.ServerThread;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -24,9 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -213,6 +208,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             });
 
             dialog.setVisible(true);
+            network.setLogic((Logic)logic);
             logic.SetNetworkconnection((Network)network);
         }
         if (e.getSource() == mNetClient) {
@@ -244,6 +240,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 });
 
                 dialog.setVisible(true);
+                network.setLogic((Logic)logic);
                 logic.SetNetworkconnection((Network)network);
             }
         }
