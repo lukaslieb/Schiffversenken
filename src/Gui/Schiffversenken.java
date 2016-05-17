@@ -6,7 +6,10 @@
 package Gui;
 
 import Datatypes.Constant;
+import Interface.IEnemy;
+import Interface.INetwork;
 import Network.ClientThread;
+import Network.Network;
 import Network.ServerThread;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,9 +38,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JMenuBar mBar = new JMenuBar();
     private JMenu mFile = new JMenu("File");
     private JMenu mHelp = new JMenu("Help");
-    private JMenu mNewLocal = new JMenu("Local");
-    private JMenuItem mLocalHuman = new JMenuItem("Mensch");
-    private JMenuItem mLocalComp = new JMenuItem("Computer");
+    private JMenuItem mNewLocal = new JMenuItem("Local");
     private JMenu mNewNet = new JMenu("Netzwerk");
     private JMenuItem mNetHost = new JMenuItem("Als Host");
     private JMenuItem mNetClient = new JMenuItem("Mit Host verbinden");
@@ -56,6 +57,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private Field[][] fieldRight;
 
     private int fieldSize = Constant.fieldSize;
+    
+    private INetwork network = null;
 
     public Schiffversenken() {
         super();
@@ -65,8 +68,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         this.fieldLeft = new Field[fieldSize][fieldSize];
         this.fieldRight = new Field[fieldSize][fieldSize];
 
-        mNewLocal.add(mLocalHuman);
-        mNewLocal.add(mLocalComp);
         mNewNet.add(mNetHost);
         mNewNet.add(mNetClient);
         mFile.add(mNewLocal);
@@ -85,8 +86,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
         mExit.addActionListener(this);
         mAbout.addActionListener(this);
-        mLocalHuman.addActionListener(this);
-        mLocalComp.addActionListener(this);
+        mNewLocal.addActionListener(this);
         mNetHost.addActionListener(this);
         mNetClient.addActionListener(this);
 
@@ -149,15 +149,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         if (e.getSource() == mAbout) {
             JOptionPane.showMessageDialog(this, "Copyright 2015 Hochschule Luzern, Technik & Architektur");
         }
-        if (e.getSource() == mLocalHuman) {
-            JOptionPane.showMessageDialog(this, "Not implementet right now");
-        }
-        if (e.getSource() == mLocalComp) {
+        if (e.getSource() == mNewLocal) {
             JOptionPane.showMessageDialog(this, "Not implementet right now");
         }
         if (e.getSource() == mNetHost) {
             NetworkHost dialog = new NetworkHost(this, "Warte auf Spieler");
-            ServerThread server = new ServerThread(dialog);
+            /*ServerThread server = new ServerThread(dialog);
 
             server.start();
 
@@ -168,7 +165,19 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     dialog.setVisible(false);
                 }
             });
-
+            */
+            network = new Network();
+            
+            network.startServer(dialog);
+            
+            dialog.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    network.stopServer();
+                    dialog.setVisible(false);
+                }
+            });
+            
             dialog.setVisible(true);
         }
         if (e.getSource() == mNetClient) {
@@ -176,7 +185,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
             if (!hostname.equals("")) {
                 NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
-                ClientThread client = new ClientThread(hostname, dialog);
+                /*ClientThread client = new ClientThread(hostname, dialog);
 
                 client.start();
 
@@ -184,6 +193,17 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         client.exitClient();
+                        dialog.setVisible(false);
+                    }
+                });*/
+                
+                network = new Network();
+                network.startClient(hostname, dialog);
+                
+                dialog.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        network.stopClient();
                         dialog.setVisible(false);
                     }
                 });

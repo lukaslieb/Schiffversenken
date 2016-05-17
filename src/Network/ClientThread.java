@@ -8,6 +8,7 @@ package Network;
 import java.net.Socket;
 import Gui.NetworkSearchHost;
 import java.io.IOException;
+import javax.swing.JDialog;
 
 /**
  *
@@ -16,12 +17,12 @@ import java.io.IOException;
 public class ClientThread extends Thread{
     private String hostname;
     private int port = 1337;
-    private NetworkSearchHost dialog;
+    private JDialog dialog;
     private boolean exit = false;
     private boolean connected = false;
     private Socket client;
     
-    public ClientThread(String hostname, NetworkSearchHost dialog){
+    public ClientThread(String hostname, JDialog dialog){
         super();
         this.hostname = hostname;
         this.dialog = dialog;
@@ -38,6 +39,7 @@ public class ClientThread extends Thread{
             while(!connected && !exit){
                 try{
                     Socket client = new Socket(hostname, port);
+                    System.out.println("Client: Server connected");
                     connected = true;
                 }
                 catch (IOException e){

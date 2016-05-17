@@ -9,6 +9,7 @@ import Gui.NetworkHost;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.JDialog;
 
 /**
  *
@@ -17,9 +18,9 @@ import java.net.Socket;
 public class ServerThread extends Thread{
     private int port = 1337;
     private ServerSocket server;
-    private NetworkHost dialog;
+    private JDialog dialog;
     
-    public ServerThread(NetworkHost dialog){
+    public ServerThread(JDialog dialog){
         super();
         try{
         server = new ServerSocket(port);
@@ -45,7 +46,7 @@ public class ServerThread extends Thread{
     public void run(){
         try{
             Socket client = server.accept();
-            
+            System.out.println("Server: Client connected");
             dialog.setVisible(false);
         }
         catch (Exception ex){
