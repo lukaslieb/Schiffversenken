@@ -22,10 +22,9 @@ public interface ILogic {
     
     /**
      * Set the ship to the coordinates witch the player choose.
-     * @param x x-positon (start vom schiff)
-     * @param y y-Position (start vom Schiff)
-     * @param alignement 
+     * @param ship
+     * @param direction 1=waagerecht, 2=senkrecht
      * @return true if the ship was acceptet at this place.
      */
-    boolean setShip(int x, int y, ShipAlignment alignement, int lenght);
+    boolean setShip(int x, int y, ShipAlignment direction, int length);
 }
