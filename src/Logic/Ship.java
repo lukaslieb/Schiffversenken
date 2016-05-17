@@ -53,10 +53,15 @@ public class Ship {
                 placement= new ShipFields[length];
                 for(int i=0; i<length; i++)
                 {
-                    placement[i]=new ShipFields()
+                    placement[i]=new ShipFields(x,y+i,FieldStatus.SHIP);
                 }
                 break;
             case HORIZONTAL:
+                placement= new ShipFields[length];
+                for(int i=0; i<length; i++)
+                {
+                    placement[i]=new ShipFields(x+i,y,FieldStatus.SHIP);
+                }
                 break;
         }
         
@@ -65,7 +70,13 @@ public class Ship {
     }
     public boolean isCollision(int x, int y){
         //TODO abfrage ob kollision
-        
+        if(x== placement[0].getX()){
+            for(int pos=0; pos<length; pos++){
+                if(y==placement[pos].getY()){
+                    return true;
+                }
+            }
+        }
     }
     public FieldStatus shootShip(int x,int y){
         //TODO allreadyhit, hit

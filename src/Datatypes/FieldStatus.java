@@ -16,6 +16,7 @@ public enum FieldStatus {
     SHIP,
     HIT,
     DESTROYED,
+    ALLREADYHIT,
     UNKNOWNAREA;
     
     public Color getColor(){
