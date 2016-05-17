@@ -113,5 +113,9 @@ public class Network implements INetwork, IEnemy{
     
     public void reciveMessage(String ans){
         System.out.println(ans);
+        /*TODO
+        shootFromEnemy() call with a send back to the other player (fieldstatus)
+        shootReply() call with recived fieldstatus
+        */
     }
 }
