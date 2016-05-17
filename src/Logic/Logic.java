@@ -40,6 +40,7 @@ public class Logic implements ILogic,ILogicEnemy{
         this.PlayingFiled = PlayingField;
     }
     
+    @Override
     public void SetNetworkconnection(IEnemy Network){
         this.Network = Network;
     }
@@ -66,17 +67,21 @@ public class Logic implements ILogic,ILogicEnemy{
     public boolean shoot(int x, int y){
         if(AmZug){
             AmZug = false;
-            FieldStatus shootfield = Network.sendMoveToEnemy(x, y);
-            if(shootfield == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
-                return false;
-            }
-            if(shootfield == FieldStatus.HIT || shootfield == FieldStatus.DESTROYED){
-                AmZug = true;
-            }
-            PlayingFiled.updateField(x, y, PlayerField.ENEMY, shootfield);
+            Network.sendMoveToEnemy(x, y);
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public void shootReply(int x, int y, FieldStatus status){
+        if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
+            AmZug = true;
+        }
+        if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
+            AmZug = true;
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
+        }
     }
     
     @Override

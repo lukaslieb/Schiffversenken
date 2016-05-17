@@ -213,6 +213,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             });
 
             dialog.setVisible(true);
+            logic.SetNetworkconnection((Network)network);
         }
         if (e.getSource() == mNetClient) {
             String hostname = JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
@@ -243,6 +244,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 });
 
                 dialog.setVisible(true);
+                logic.SetNetworkconnection((Network)network);
             }
         }
     }

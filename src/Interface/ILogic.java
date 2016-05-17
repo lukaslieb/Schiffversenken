@@ -27,4 +27,6 @@ public interface ILogic {
      * @return true if the ship was acceptet at this place.
      */
     boolean setShip(int x, int y, ShipAlignment direction, int length);
+    
+    void SetNetworkconnection(IEnemy Network);
 }
