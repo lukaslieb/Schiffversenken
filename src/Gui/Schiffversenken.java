@@ -5,9 +5,13 @@
  */
 package Gui;
 
+import javax.swing.JOptionPane;
 import Datatypes.Constant;
+import Datatypes.FieldStatus;
+import Datatypes.PlayerField;
 import Interface.IEnemy;
 import Interface.INetwork;
+import Interface.IPlayingField;
 import Network.ClientThread;
 import Network.Network;
 import Network.ServerThread;
@@ -33,7 +37,7 @@ import javax.swing.JPanel;
  *
  * @author Lukas
  */
-public class Schiffversenken extends JFrame implements ActionListener, MouseListener {
+public class Schiffversenken extends JFrame implements ActionListener, MouseListener, IPlayingField {
 
     private JMenuBar mBar = new JMenuBar();
     private JMenu mFile = new JMenu("File");
@@ -57,7 +61,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private Field[][] fieldRight;
 
     private int fieldSize = Constant.fieldSize;
-    
+
     private INetwork network = null;
 
     public Schiffversenken() {
@@ -165,11 +169,11 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     dialog.setVisible(false);
                 }
             });
-            */
+             */
             network = new Network();
-            
+
             network.startServer(dialog);
-            
+
             dialog.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -177,7 +181,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     dialog.setVisible(false);
                 }
             });
-            
+
             dialog.setVisible(true);
         }
         if (e.getSource() == mNetClient) {
@@ -196,10 +200,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                         dialog.setVisible(false);
                     }
                 });*/
-                
+
                 network = new Network();
                 network.startClient(hostname, dialog);
-                
+
                 dialog.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -247,5 +251,32 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     @Override
     public void mousePressed(MouseEvent e) {
 
+    }
+
+    @Override
+    public void updateField(int x, int y, PlayerField field, FieldStatus status) {
+
+        switch (field) {
+            case ENEMY:
+                this.fieldRight[x][y].getButton().setBackground(status.getColor());
+                break;
+
+            case OWN:
+                this.fieldLeft[x][y].getButton().setBackground(status.getColor());
+                break;
+
+            default:
+
+                break;
+        }
+    }
+
+    @Override
+    public void gameOver(boolean won) {
+        if (won) {
+            JOptionPane.showMessageDialog(null, "YOU WON!");
+        } else {
+            JOptionPane.showMessageDialog(null, "YOU LOST!");
+        }
     }
 }

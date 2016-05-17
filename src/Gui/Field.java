@@ -34,5 +34,6 @@ public class Field {
     public JButton getButton() {
         return this.button;
     }
-
+    
+   
 }
