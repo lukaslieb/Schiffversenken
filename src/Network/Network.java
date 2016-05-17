@@ -109,6 +109,12 @@ public class Network implements INetwork, IEnemy{
         String msg = "{ \"type\": \"1\", \"x\": \""+x+"\",\"y\": \""+y+"\" }";
         writer.sendMessage(msg);
     }
+    
+    @Override
+    public void sendGameWin(boolean win){
+        String msg = "{ \"type\": \"3\", \"win\": \""+win+"\" }";
+        writer.sendMessage(msg);
+    }
 
     @Override
     public void comWithEnemy(String message) {
@@ -122,6 +128,7 @@ public class Network implements INetwork, IEnemy{
         int x;
         int y;
         String msg;
+        boolean win;
         FieldStatus status;
         switch(obj.getInt("type")){
             case 1:
@@ -139,7 +146,8 @@ public class Network implements INetwork, IEnemy{
                 logic.shootReply(x, y, status);
                 break;
             case 3:
-                //TODO sendGameOver
+                win = obj.getBoolean("win");
+                //TODO logic.gameWin(win);
                 break;
             case 4:
                 System.out.println(obj.getString("message"));
@@ -147,9 +155,5 @@ public class Network implements INetwork, IEnemy{
             default:
                 System.out.println("Wrong Message Type");
         }
-        /*TODO
-        shootFromEnemy() call with a send back to the other player (fieldstatus)
-        shootReply() call with recived fieldstatus
-        */
     }
 }

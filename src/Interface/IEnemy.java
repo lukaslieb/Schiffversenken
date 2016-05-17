@@ -19,6 +19,12 @@ public interface IEnemy {
     void sendMoveToEnemy(int x, int y);
     
     /**
+     * This function sends win to the enemy if you loose.
+     * @param win = true if the enemy wins
+     */
+    void sendGameWin(boolean win);
+    
+    /**
      * This function sends messages to the enemy
      * @param msg = String Message
      */
