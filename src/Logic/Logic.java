@@ -46,9 +46,19 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public boolean setShip(int x, int y, ShipAlignment direction, int lenght){
         Ship newShip = new Ship(x, y, direction, lenght);
-        //TODO test wether ship is placeable
-        //TODO add ship to list
-        //TODO return wether placeable
+        //When the Sips are not empty do collision detection
+        if(!Ships.isEmpty()){
+            for(ShipFields SF : newShip.returnShipFields()){
+                for(Ship s : Ships){
+                    if(s.isCollision(SF.getX(), SF.getY())){
+                        return false; //Collison detected
+                    }
+                }
+            }
+        }
+        UpdateWholeShip(newShip);
+        Ships.add(newShip); //Add ship to the list
+        return true;
     }
     
     @Override
@@ -65,17 +75,29 @@ public class Logic implements ILogic,ILogicEnemy{
     public FieldStatus shootFromEnemy(int x, int y){
         boolean accepted = false;
         for(Ship s : Ships){
-            // TODO auf jedes schiff schiessen
-            // TODO wenn getroffen, accepted = true;
-        }
-        if(!accepted){
-            if(WaterField[x][y] == FieldStatus.UNKNOWNAREA){
-                WaterField[x][y] = FieldStatus.WATER;
-                accepted = true;
-                PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
-                return FieldStatus.WATER;
+            FieldStatus status = s.shootShip(x, y);
+            if(status != FieldStatus.UNKNOWNAREA){
+                if(FieldStatus.ALLREADYHIT != status){
+                    if(status == FieldStatus.DESTROYED){
+                        UpdateWholeShip(s);
+                    }
+                    PlayingFiled.updateField(x, y, PlayerField.OWN, status);
+                }
+                return status;          //Return new Fieldstatus
             }
         }
-        return FieldStatus.UNKNOWNAREA; //already hit means not accepted shot
+        if(WaterField[x][y] == FieldStatus.UNKNOWNAREA){
+            WaterField[x][y] = FieldStatus.WATER;
+            accepted = true;
+            PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
+            return FieldStatus.WATER;    //return new Status
+        }
+        return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
+    }
+    
+    private void UpdateWholeShip(Ship s){
+        for(ShipFields SF : s.returnShipFields()){
+            PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, SF.getStatus());
+        }
     }
 }

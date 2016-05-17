@@ -7,6 +7,7 @@ package Logic;
 import static Datatypes.Constant.fieldSize;
 import Datatypes.FieldStatus;
 import Datatypes.ShipAlignment;
+import java.util.HashSet;
 
 /**
  * Class witch define the Ship
@@ -18,8 +19,10 @@ public class Ship {
     private ShipAlignment align;
     private int length;
     private ShipFields[] placement;
+    private boolean Destroyed;
     
     public Ship(int x, int y, ShipAlignment align, int length){
+        Destroyed = false;
         this.x = x;
         this.y = y;
         this.align = align;
@@ -69,7 +72,7 @@ public class Ship {
        
     }
     public boolean isCollision(int x, int y){
-        //TODO abfrage ob kollision
+        //TODO abfrage ob kollision ausbessern evtl.
         if(x== placement[0].getX()){
             for(int pos=0; pos<length; pos++){
                 if(y==placement[pos].getY()){
@@ -77,15 +80,38 @@ public class Ship {
                 }
             }
         }
+        return false;
     }
     public FieldStatus shootShip(int x,int y){
-        //TODO allreadyhit, hit
-        
+        for(ShipFields SF : placement){
+            if((SF.getX() == x) &&(SF.getY() == y)){
+                if(SF.getStatus() == FieldStatus.SHIP){
+                    SF.setStatus(FieldStatus.HIT);
+                    TestDestroyedship();
+                    return SF.getStatus();
+                }
+            }
+        }
         return FieldStatus.UNKNOWNAREA;
     }
+    
+    private void TestDestroyedship(){
+        boolean destroyed = true;
+        for(ShipFields SF : placement){
+            if((SF.getStatus() != FieldStatus.HIT) || (SF.getStatus() != FieldStatus.DESTROYED)){
+                destroyed = false;
+            }
+        }
+        if(destroyed == true){
+            for(ShipFields SF : placement){
+                SF.setStatus(FieldStatus.DESTROYED);
+            }
+        }
+        this.Destroyed = destroyed;
+    }
+    
     public boolean isDestroyed(){
-        
-        //TODO true, false
+        return Destroyed;
     }
     public ShipFields[] returnShipFields (){
         return placement;
