@@ -15,9 +15,8 @@ public interface IEnemy {
      * This function sends the last move from the local player to the enemy.
      * @param x = x coordinate
      * @param y = y coordinate
-     * @return FieldStatus
      */
-    FieldStatus sendMoveToEnemy(int x, int y);
+    void sendMoveToEnemy(int x, int y);
     
     /**
      * This function sends messages to the enemy

@@ -18,4 +18,12 @@ public interface ILogicEnemy {
      * @return FieldStatus for the status of the Field witch was shoot
      */
     FieldStatus shootFromEnemy(int x, int y);
+    
+    /**
+     * This method takes the fieldstatus from the enemy.
+     * @param x
+     * @param y
+     * @param FieldStatus status
+     */
+    void shootReply(int x, int y, FieldStatus status);
 }

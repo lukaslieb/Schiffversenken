@@ -18,9 +18,11 @@ import javax.swing.JDialog;
 public class ServerThread extends Thread{
     private int port = 1337;
     private ServerSocket server;
+    private Socket socket;
     private JDialog dialog;
+    private Network network;
     
-    public ServerThread(JDialog dialog){
+    public ServerThread(JDialog dialog, Network network){
         super();
         try{
         server = new ServerSocket(port);
@@ -29,6 +31,7 @@ public class ServerThread extends Thread{
             System.err.println("Error: "+ex.getMessage());
         }
         this.dialog = dialog;
+        this.network = network;
     }
     
     public boolean serverExit(){
@@ -45,9 +48,10 @@ public class ServerThread extends Thread{
     @Override
     public void run(){
         try{
-            Socket client = server.accept();
+            socket = server.accept();
             System.out.println("Server: Client connected");
             dialog.setVisible(false);
+            network.setSocket(socket);
         }
         catch (Exception ex){
             System.err.println("Server Error: " + ex.getMessage());
