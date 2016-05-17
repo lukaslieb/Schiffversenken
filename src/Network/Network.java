@@ -147,7 +147,7 @@ public class Network implements INetwork, IEnemy{
                 break;
             case 3:
                 win = obj.getBoolean("win");
-                //TODO logic.gameWin(win);
+                logic.gameWin(win);
                 break;
             case 4:
                 System.out.println(obj.getString("message"));

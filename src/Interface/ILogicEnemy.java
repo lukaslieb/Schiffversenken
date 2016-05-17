@@ -26,4 +26,6 @@ public interface ILogicEnemy {
      * @param FieldStatus status
      */
     void shootReply(int x, int y, FieldStatus status);
+    
+    void gameWin(boolean win);
 }
