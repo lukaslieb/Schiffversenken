@@ -11,6 +11,8 @@ import Interface.ILogic;
 import Interface.INetwork;
 import java.net.Socket;
 import javax.swing.JDialog;
+import jdk.nashorn.internal.ir.debug.JSONWriter;
+import netscape.javascript.JSObject;
 
 /**
  *
@@ -22,6 +24,8 @@ public class Network implements INetwork, IEnemy{
     private ServerThread server;
     private ClientThread client;
     private String hostname;
+    private NetworkReader reader;
+    private NetworkWriter writer;
     
     public Network(){
         server = null;
@@ -81,18 +85,33 @@ public class Network implements INetwork, IEnemy{
     
     public void setSocket(Socket socket){
         this.socket = socket;
+        startReaderWriter();
+    }
+    
+    private void startReaderWriter(){
+        reader = new NetworkReader(socket);
+        writer = new NetworkWriter(socket);
+        new Thread(reader).start(); 
+        
+        //TestBlock
+        if(client != null){
+            System.out.println("send message");
+            comWithEnemy("PRG2 Project");
+        }
     }
 
     @Override
-    public FieldStatus sendMoveToEnemy(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void sendMoveToEnemy(int x, int y) {
+        String msg = "X:"+x+",Y:"+y;
+        writer.sendMessage(msg);
     }
 
     @Override
     public void comWithEnemy(String msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writer.sendMessage(msg);
     }
-
     
-    
+    public void reciveMessage(String ans){
+        System.out.println(ans);
+    }
 }

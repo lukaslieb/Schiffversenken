@@ -5,6 +5,9 @@
  */
 package Network;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 /**
@@ -13,6 +16,8 @@ import java.net.Socket;
  */
 public class NetworkReader implements Runnable{
     private Socket socket;
+    private BufferedReader inStream;
+    private String line;
     
     public NetworkReader(Socket socket){
         this.socket = socket;
@@ -20,7 +25,15 @@ public class NetworkReader implements Runnable{
     
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            while ((line = inStream.readLine()) != null){
+                System.out.println(line);
+            } 
+        }
+        catch(IOException ex){
+            System.err.println("NetworkReader Error: " + ex.getMessage());
+        }
     }
     
 }

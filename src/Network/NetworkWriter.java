@@ -5,22 +5,31 @@
  */
 package Network;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
  *
  * @author Lukas
  */
-public class NetworkWriter implements Runnable{
+public class NetworkWriter{
     private Socket socket;
+    private PrintWriter outStream;
     
     public NetworkWriter(Socket socket){
         this.socket = socket;
+        try{
+            outStream = new PrintWriter(socket.getOutputStream()); 
+        }
+        catch(IOException ex){
+            System.err.println("NetworkWriter Error: " + ex.getMessage());
+        }
     }
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public void sendMessage(String msg){
+        outStream.println(msg);
+        outStream.flush(); 
     }
     
 }
