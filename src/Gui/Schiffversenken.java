@@ -268,7 +268,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
         if (e.getComponent() == vertikal) {
             sa = ShipAlignment.VERTICAL;
-        } else if (e.getComponent() == horizontal) {
+        } else //if (e.getComponent() == horizontal)
+        {
             sa = ShipAlignment.HORIZONTAL;
         }
 
@@ -276,18 +277,24 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             for (int col = 0; col < fieldSize; col++) {
                 if (fieldLeft[col][row].getButton() == e.getComponent()) {
                     if (setShips) {
-                        logic.setShip(col, row, sa, shipNumbers);
-                        shipNumbers++;
-                        if (shipNumbers == 10) {
-                            setShips = false;
+                        //JOptionPane.showMessageDialog(this, col + "-" + row + "-" + sa +"-"+Constant.ships[shipNumbers]);
+                        boolean collision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
+                        if(!collision){
+                            JOptionPane.showMessageDialog(this,"Kollision beim Platzieren des Schiffes erkannt");
+                        }
+                        else{
+                            shipNumbers++;
+                            if (shipNumbers >= Constant.ships.length) {
+                                setShips = false;
+                            }
                         }
                     } else {
-                        logic.shoot(row, col);
+                        //logic.shoot(row, col);
                     }
                 }
                 if (fieldRight[col][row].getButton() == e.getComponent()) {
                     if (!setShips) {
-                        logic.shoot(row, col);
+                        logic.shoot(col, row);
                     }
                 }
             }

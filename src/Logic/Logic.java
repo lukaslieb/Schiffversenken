@@ -25,12 +25,13 @@ public class Logic implements ILogic,ILogicEnemy{
     private IEnemy Network;
     private ArrayList<Ship> Ships = new ArrayList<Ship>();
     private FieldStatus[][] WaterField = new FieldStatus[Constant.fieldSize][Constant.fieldSize]; 
+    boolean AmZug = true;
     
-    public void Logic(){
+    public Logic(){
         //Init
-        for(FieldStatus[] s : WaterField){
-            for(FieldStatus f : s){
-                f = FieldStatus.UNKNOWNAREA;
+        for(int i = 0; i < Constant.fieldSize; i++){
+            for(int x = 0; x < Constant.fieldSize; x++){
+                WaterField[i][x] = FieldStatus.UNKNOWNAREA;
             }
         }
     }
@@ -63,12 +64,19 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public boolean shoot(int x, int y){
-        FieldStatus shootfield = Network.sendMoveToEnemy(x, y);
-        if(shootfield == FieldStatus.UNKNOWNAREA){  //when the soot wasn't accepted
-            return false;
+        if(AmZug){
+            AmZug = false;
+            FieldStatus shootfield = Network.sendMoveToEnemy(x, y);
+            if(shootfield == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
+                return false;
+            }
+            if(shootfield == FieldStatus.HIT || shootfield == FieldStatus.DESTROYED){
+                AmZug = true;
+            }
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, shootfield);
+            return true;
         }
-        PlayingFiled.updateField(x, y, PlayerField.ENEMY, shootfield);
-        return true;
+        return false;
     }
     
     @Override
@@ -80,6 +88,7 @@ public class Logic implements ILogic,ILogicEnemy{
                 if(FieldStatus.ALLREADYHIT != status){
                     if(status == FieldStatus.DESTROYED){
                         UpdateWholeShip(s);
+                        TestWin();
                     }
                     PlayingFiled.updateField(x, y, PlayerField.OWN, status);
                 }
@@ -90,6 +99,7 @@ public class Logic implements ILogic,ILogicEnemy{
             WaterField[x][y] = FieldStatus.WATER;
             accepted = true;
             PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
+            AmZug = true;                //if he hits water his turn ends and you starts
             return FieldStatus.WATER;    //return new Status
         }
         return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
@@ -98,6 +108,17 @@ public class Logic implements ILogic,ILogicEnemy{
     private void UpdateWholeShip(Ship s){
         for(ShipFields SF : s.returnShipFields()){
             PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, SF.getStatus());
+        }
+    }
+   
+    private void TestWin(){
+        boolean fertig = true;
+        for(Ship s : Ships){
+            if(!s.isDestroyed())
+                fertig = false;
+        }
+        if(fertig){
+            PlayingFiled.gameOver(false);
         }
     }
 }

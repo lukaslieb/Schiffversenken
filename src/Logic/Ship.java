@@ -37,13 +37,13 @@ public class Ship {
     private void checkPos(){
         switch(align){
             case VERTICAL:
-                if(!((y+length) < fieldSize)){
-                    y=fieldSize-length-1;
+                if(!((y+length) <= fieldSize)){
+                    y=fieldSize-length;
                 }
                 break;
             case HORIZONTAL:
-                if(!((x+length) < fieldSize)){
-                    x=fieldSize-length-1;
+                if(!((x+length) <= fieldSize)){
+                    x=fieldSize-length;
                 }
                 break;
         }
@@ -73,9 +73,9 @@ public class Ship {
     }
     public boolean isCollision(int x, int y){
         //TODO abfrage ob kollision ausbessern evtl.
-        if(x== placement[0].getX()){
-            for(int pos=0; pos<length; pos++){
-                if(y==placement[pos].getY()){
+        for(ShipFields SF : placement){
+            if(SF.getX()-1 <= x && x <= SF.getX()+1){
+                if(SF.getY()-1 <= y && y <= SF.getY()+1){
                     return true;
                 }
             }
@@ -84,11 +84,14 @@ public class Ship {
     }
     public FieldStatus shootShip(int x,int y){
         for(ShipFields SF : placement){
-            if((SF.getX() == x) &&(SF.getY() == y)){
+            if((SF.getX() == x) &&(SF.getY() == y)){   //èbereinstimmung gefunden
                 if(SF.getStatus() == FieldStatus.SHIP){
                     SF.setStatus(FieldStatus.HIT);
                     TestDestroyedship();
                     return SF.getStatus();
+                }
+                else{                                  //bereits getroffen
+                    return FieldStatus.ALLREADYHIT;
                 }
             }
         }
@@ -98,7 +101,7 @@ public class Ship {
     private void TestDestroyedship(){
         boolean destroyed = true;
         for(ShipFields SF : placement){
-            if((SF.getStatus() != FieldStatus.HIT) || (SF.getStatus() != FieldStatus.DESTROYED)){
+            if((SF.getStatus() != FieldStatus.HIT) && (SF.getStatus() != FieldStatus.DESTROYED)){
                 destroyed = false;
             }
         }

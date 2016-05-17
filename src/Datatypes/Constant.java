@@ -15,6 +15,6 @@ public class Constant {
     public static final int port = 1337;
     
     //index = ship size
-    public static final int ships [] = {5,4,4,3,3,3,2,2,2,2}; 
+    public static final int ships [] = {4,3,2,2};
     
 }
