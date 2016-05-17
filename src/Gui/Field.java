@@ -24,16 +24,15 @@ public class Field {
     }
 
     public int getX() {
-        return this.x + 1;
+        return this.x;
     }
 
     public int getY() {
-        return this.y + 1;
+        return this.y;
     }
 
     public JButton getButton() {
         return this.button;
     }
-    
-   
+
 }
