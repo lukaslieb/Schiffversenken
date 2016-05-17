@@ -23,4 +23,4 @@ public class Ship {
         this.status = status;
         this.align = align;
     }
-}
+}//test
