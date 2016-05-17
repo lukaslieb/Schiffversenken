@@ -93,11 +93,11 @@ public class Network implements INetwork, IEnemy{
         new Thread(reader).start(); 
         
         //TestBlock
-        if(client != null){
+        /*if(client != null){
             System.out.println("send message");
             //comWithEnemy("PRG2 Project");
             sendMoveToEnemy(5, 7);
-        }
+        }*/
     }
 
     @Override
@@ -128,9 +128,9 @@ public class Network implements INetwork, IEnemy{
                 x = obj.getInt("x");
                 y = obj.getInt("y");
                 System.out.println(x+", "+y);
-                //status = logic.shootFromEnemy(x, y);
-                //msg = "{ \"type\": \"2\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"status\": \""+status.name()+"\" }";
-                //writer.sendMessage(msg);
+                status = logic.shootFromEnemy(x, y);
+                msg = "{ \"type\": \"2\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"status\": \""+status.name()+"\" }";
+                writer.sendMessage(msg);
                 break;
             case 2:
                 x = obj.getInt("x");
