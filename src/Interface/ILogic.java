@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Interface;
+import Datatypes.ShipAlignment;
 import Logic.Ship;
 
 /**
@@ -21,8 +22,10 @@ public interface ILogic {
     
     /**
      * Set the ship to the coordinates witch the player choose.
-     * @param ship
+     * @param x x-positon (start vom schiff)
+     * @param y y-Position (start vom Schiff)
+     * @param alignement 
      * @return true if the ship was acceptet at this place.
      */
-    boolean setShip(Ship ship);
+    boolean setShip(int x, int y, ShipAlignment alignement, int lenght);
 }

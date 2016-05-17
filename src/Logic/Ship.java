@@ -14,13 +14,24 @@ import Datatypes.ShipAlignment;
 public class Ship {
     private int x;
     private int y;
-    private FieldStatus status;
     private ShipAlignment align;
+    private int length;
     
-    public Ship(int x, int y, FieldStatus status, ShipAlignment align){
+    
+    public Ship(int x, int y, ShipAlignment align, int length){
         this.x = x;
         this.y = y;
-        this.status = status;
         this.align = align;
+        this.length = length;
+        CreateShip();
     }
-}//test
+    
+    private void CreateShip(){
+        switch(align){
+            case VERTICAL:
+                break;
+            case HORIZONTAL:
+                break;
+        }
+    }
+}
