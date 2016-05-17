@@ -39,4 +39,19 @@ public enum FieldStatus {
         }
         return color;
     }
+    
+    public static FieldStatus getEnumState(String status){
+        switch (status){
+            case "WATER":
+                return WATER;
+            case "SHIP":
+                return SHIP;
+            case "HIT":
+                return HIT;
+            case "DESTROYED":
+                return DESTROYED;
+            default:
+                return UNKNOWNAREA;   
+        }
+    }
 }

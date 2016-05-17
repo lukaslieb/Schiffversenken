@@ -20,5 +20,5 @@ public interface INetwork {
     
     boolean stopServer();
     
-    void setLogic(ILogic logic);
+    void setLogic(ILogicEnemy logic);
 }

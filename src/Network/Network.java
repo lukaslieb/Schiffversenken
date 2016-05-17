@@ -5,22 +5,20 @@
  */
 package Network;
 
-import Datatypes.FieldStatus;
 import Interface.IEnemy;
-import Interface.ILogic;
+import Interface.ILogicEnemy;
 import Interface.INetwork;
 import java.net.Socket;
 import javax.swing.JDialog;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
-import netscape.javascript.JSObject;
 import org.json.JSONObject;
+import Datatypes.FieldStatus;
 
 /**
  *
  * @author Lukas
  */
 public class Network implements INetwork, IEnemy{
-    private ILogic logic;
+    private ILogicEnemy logic;
     private Socket socket;
     private ServerThread server;
     private ClientThread client;
@@ -80,7 +78,7 @@ public class Network implements INetwork, IEnemy{
     }
 
     @Override
-    public void setLogic(ILogic logic) {
+    public void setLogic(ILogicEnemy logic) {
         this.logic = logic;
     }
     
@@ -104,20 +102,51 @@ public class Network implements INetwork, IEnemy{
 
     @Override
     public void sendMoveToEnemy(int x, int y) {
-        String msg = "{ \"x\": \""+x+"\",\"y\": \""+y+"\" }";
+        //message 1: sendMoveToEnemy
+        //message 2: sendFieldStatus
+        //message 3: sendGameOver
+        //message 4: sendMessage
+        String msg = "{ \"type\": \"1\", \"x\": \""+x+"\",\"y\": \""+y+"\" }";
         writer.sendMessage(msg);
     }
 
     @Override
-    public void comWithEnemy(String msg) {
+    public void comWithEnemy(String message) {
+        String msg = "{ \"type\": \"4\", \"message\": \""+message+"\" }";
         writer.sendMessage(msg);
     }
     
     public void reciveMessage(String ans){
         System.out.println(ans);
         JSONObject obj = new JSONObject(ans);
-        System.out.println(obj.getInt("x"));
-        System.out.println(obj.getString("status"));
+        int x;
+        int y;
+        String msg;
+        FieldStatus status;
+        switch(obj.getInt("type")){
+            case 1:
+                x = obj.getInt("x");
+                y = obj.getInt("y");
+                System.out.println(x+", "+y);
+                //status = logic.shootFromEnemy(x, y);
+                //msg = "{ \"type\": \"2\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"status\": \""+status.name()+"\" }";
+                //writer.sendMessage(msg);
+                break;
+            case 2:
+                x = obj.getInt("x");
+                y = obj.getInt("y");
+                status = FieldStatus.getEnumState(obj.getString("status"));
+                logic.shootReply(x, y, status);
+                break;
+            case 3:
+                //TODO sendGameOver
+                break;
+            case 4:
+                System.out.println(obj.getString("message"));
+                break;
+            default:
+                System.out.println("Wrong Message Type");
+        }
         /*TODO
         shootFromEnemy() call with a send back to the other player (fieldstatus)
         shootReply() call with recived fieldstatus
