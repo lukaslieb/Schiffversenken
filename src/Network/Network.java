@@ -18,7 +18,7 @@ import javax.swing.JDialog;
  */
 public class Network implements INetwork, IEnemy{
     private ILogic logic;
-    //private Socket socket;
+    private Socket socket;
     private ServerThread server;
     private ClientThread client;
     private String hostname;
@@ -34,7 +34,7 @@ public class Network implements INetwork, IEnemy{
     public boolean startClient(String hosthame, JDialog dialog) {
         this.hostname = hostname;
         try{
-            client = new ClientThread(hostname, dialog);
+            client = new ClientThread(hostname, dialog, this);
             client.start();
             return true;
         }
@@ -47,7 +47,7 @@ public class Network implements INetwork, IEnemy{
     @Override
     public boolean startServer(JDialog dialog) {
         try{
-            server = new ServerThread(dialog);
+            server = new ServerThread(dialog, this);
             server.start();
             return true;
         }
@@ -77,6 +77,10 @@ public class Network implements INetwork, IEnemy{
     @Override
     public void setLogic(ILogic logic) {
         this.logic = logic;
+    }
+    
+    public void setSocket(Socket socket){
+        this.socket = socket;
     }
 
     @Override

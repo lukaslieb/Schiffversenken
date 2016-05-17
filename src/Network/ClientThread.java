@@ -21,11 +21,13 @@ public class ClientThread extends Thread{
     private boolean exit = false;
     private boolean connected = false;
     private Socket client;
+    private Network network;
     
-    public ClientThread(String hostname, JDialog dialog){
+    public ClientThread(String hostname, JDialog dialog, Network network){
         super();
         this.hostname = hostname;
         this.dialog = dialog;
+        this.network = network;
     }
     
     public void exitClient(){
@@ -41,6 +43,7 @@ public class ClientThread extends Thread{
                     Socket client = new Socket(hostname, port);
                     System.out.println("Client: Server connected");
                     connected = true;
+                    network.setSocket(client);
                 }
                 catch (IOException e){
                     //Hostsuche
