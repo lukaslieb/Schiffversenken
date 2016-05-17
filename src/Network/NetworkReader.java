@@ -18,9 +18,11 @@ public class NetworkReader implements Runnable{
     private Socket socket;
     private BufferedReader inStream;
     private String line;
+    private Network network;
     
-    public NetworkReader(Socket socket){
+    public NetworkReader(Socket socket, Network network){
         this.socket = socket;
+        this.network = network;
     }
     
     @Override
@@ -28,7 +30,8 @@ public class NetworkReader implements Runnable{
         try{
             inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while ((line = inStream.readLine()) != null){
-                System.out.println(line);
+                //System.out.println(line);
+                network.reciveMessage(line);
             } 
         }
         catch(IOException ex){

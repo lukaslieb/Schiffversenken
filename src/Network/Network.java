@@ -13,6 +13,7 @@ import java.net.Socket;
 import javax.swing.JDialog;
 import jdk.nashorn.internal.ir.debug.JSONWriter;
 import netscape.javascript.JSObject;
+import org.json.JSONObject;
 
 /**
  *
@@ -89,20 +90,21 @@ public class Network implements INetwork, IEnemy{
     }
     
     private void startReaderWriter(){
-        reader = new NetworkReader(socket);
+        reader = new NetworkReader(socket, this);
         writer = new NetworkWriter(socket);
         new Thread(reader).start(); 
         
         //TestBlock
         if(client != null){
             System.out.println("send message");
-            comWithEnemy("PRG2 Project");
+            //comWithEnemy("PRG2 Project");
+            sendMoveToEnemy(5, 7);
         }
     }
 
     @Override
     public void sendMoveToEnemy(int x, int y) {
-        String msg = "X:"+x+",Y:"+y;
+        String msg = "{ \"x\": \""+x+"\",\"y\": \""+y+"\" }";
         writer.sendMessage(msg);
     }
 
@@ -113,6 +115,9 @@ public class Network implements INetwork, IEnemy{
     
     public void reciveMessage(String ans){
         System.out.println(ans);
+        JSONObject obj = new JSONObject(ans);
+        System.out.println(obj.getInt("x"));
+        System.out.println(obj.getString("status"));
         /*TODO
         shootFromEnemy() call with a send back to the other player (fieldstatus)
         shootReply() call with recived fieldstatus
