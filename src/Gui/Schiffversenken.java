@@ -269,7 +269,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (setShips) {
+        if (setShips && ownField(e)) {
             actualShipSize = Constant.ships[shipNumbers];
             if (e.getComponent().getBackground() == Color.white) {
                 getClickedButtonLeft(e).setBackground(Color.yellow);
@@ -283,7 +283,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                         break;
                 }
             }
-
         }
     }
 
@@ -446,5 +445,19 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             }
             count++;
         }
+    }
+    
+    public boolean ownField(MouseEvent e){
+        boolean ownField = true;
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldRight[col][row].getButton() == e.getComponent()) {
+                    ownField = false;
+                }
+            }
+        }
+        
+        
+        return ownField;
     }
 }
