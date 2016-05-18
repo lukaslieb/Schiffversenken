@@ -62,6 +62,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private Field[][] fieldLeft;
     private Field[][] fieldRight;
     private int shipNumbers;
+    private ShipAlignment sa;
 
     private boolean setShips;
 
@@ -263,11 +264,11 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        ShipAlignment sa = null;
+        
 
-        if (e.getComponent() == vertikal) {
+        if (vertikal == e.getComponent()) {
             sa = ShipAlignment.VERTICAL;
-        } else //if (e.getComponent() == horizontal)
+        } else if (horizontal == e.getComponent())
         {
             sa = ShipAlignment.HORIZONTAL;
         }
