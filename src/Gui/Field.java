@@ -22,6 +22,10 @@ public class Field {
         this.x = x;
         this.y = y;
     }
+    
+    public Field(){
+        
+    }
 
     public int getX() {
         return this.x;

@@ -55,14 +55,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JPanel placementOptions = new JPanel();
     private JLabel shipSize = new JLabel();
     private JLabel shipCount = new JLabel();
-    private JButton horizontal = new JButton("Horizontal");
-    private JButton vertikal = new JButton("Vertikal");
     private JPanel leftPanel = new JPanel();
     private JPanel rightPanel = new JPanel();
     private Field[][] fieldLeft;
     private Field[][] fieldRight;
     private int shipNumbers;
     private ShipAlignment sa;
+    private int actualShipSize;
 
     private boolean setShips;
 
@@ -75,10 +74,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     public Schiffversenken() {
         super();
         this.fieldSize = Constant.fieldSize;
-        this.sa=ShipAlignment.HORIZONTAL;
+        this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 800);
-        setLayout(new GridLayout(2, 2));
+        setLayout(new GridLayout(2, 2, 10, 10));
         this.fieldLeft = new Field[fieldSize][fieldSize];
         this.fieldRight = new Field[fieldSize][fieldSize];
         this.setShips = true;
@@ -125,11 +124,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         leftTopPanel.add(placementOptions);
         placementOptions.add(shipSize);
         placementOptions.add(shipCount);
-        placementOptions.add(vertikal);
-        placementOptions.add(horizontal);
-        vertikal.addMouseListener(this);
-        horizontal.addMouseListener(this);
-        shipSize.setText("Schiffgrösse " + Constant.ships.length);
+        shipSize.setText("Platziere deine Schiffe");
         shipSize.setFont(shipSize.getFont().deriveFont(25.0f));
         placementOptions.setVisible(true);
 
@@ -212,8 +207,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             });
 
             dialog.setVisible(true);
-            network.setLogic((Logic)logic);
-            logic.SetNetworkconnection((Network)network);
+            network.setLogic((Logic) logic);
+            logic.SetNetworkconnection((Network) network);
         }
         if (e.getSource() == mNetClient) {
             String hostname = JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
@@ -244,65 +239,48 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 });
 
                 dialog.setVisible(true);
-                network.setLogic((Logic)logic);
-                logic.SetNetworkconnection((Network)network);
+                network.setLogic((Logic) logic);
+                logic.SetNetworkconnection((Network) network);
             }
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            if (sa == ShipAlignment.HORIZONTAL) {
+                sa = ShipAlignment.VERTICAL;
+                if (setShips) {
+                    drawWhite();
+                }
+                getClickedButtonLeft(e).setBackground(Color.yellow);
+                drawVertical(e);
+            } else {
+                sa = ShipAlignment.HORIZONTAL;
+                if (setShips) {
+                    drawWhite();
+                }
+                getClickedButtonLeft(e).setBackground(Color.yellow);
+                drawHorizontal(e);
+            }
+        }
 
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        if (setShips) {
+            actualShipSize = Constant.ships[shipNumbers];
+            if (e.getComponent().getBackground() == Color.white) {
+                getClickedButtonLeft(e).setBackground(Color.yellow);
+                switch (sa) {
+                    case HORIZONTAL:
+                        drawHorizontal(e);
+                        break;
 
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        
-
-        if (vertikal == e.getComponent()) {
-            sa = ShipAlignment.VERTICAL;
-        } else if (horizontal == e.getComponent())
-        {
-            sa = ShipAlignment.HORIZONTAL;
-        }
-
-        for (int row = 0; row < fieldSize; row++) {
-            for (int col = 0; col < fieldSize; col++) {
-                if (fieldLeft[col][row].getButton() == e.getComponent()) {
-                    if (setShips) {
-                        //JOptionPane.showMessageDialog(this, col + "-" + row + "-" + sa +"-"+Constant.ships[shipNumbers]);
-                        boolean collision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
-                        if(!collision){
-                            JOptionPane.showMessageDialog(this,"Kollision beim Platzieren des Schiffes erkannt");
-                        }
-                        else{
-                            shipNumbers++;
-                            if(shipNumbers < Constant.ships.length){
-                                shipSize.setText("Schiffgrösse " + Constant.ships[shipNumbers]);
-                            }
-                            if (shipNumbers >= Constant.ships.length) {
-                                setShips = false;
-                                placementOptions.setVisible(false);
-                            }
-                        }
-                    } else {
-                        //logic.shoot(row, col);
-                    }
-                }
-                if (fieldRight[col][row].getButton() == e.getComponent()) {
-                    if (!setShips) {
-                        logic.shoot(col, row);
-                    }
+                    case VERTICAL:
+                        drawVertical(e);
+                        break;
                 }
             }
 
@@ -310,12 +288,58 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mouseExited(MouseEvent e) {
+        if (setShips) {
+            drawWhite();
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e
+    ) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            for (int row = 0; row < fieldSize; row++) {
+                for (int col = 0; col < fieldSize; col++) {
+                    if (fieldLeft[col][row].getButton() == e.getComponent()) {
+                        if (setShips) {
+                            //JOptionPane.showMessageDialog(this, col + "-" + row + "-" + sa +"-"+Constant.ships[shipNumbers]);
+                            boolean collision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
+                            if (!collision) {
+                                JOptionPane.showMessageDialog(this, "Kollision beim Platzieren des Schiffes erkannt");
+                            } else {
+                                shipNumbers++;
+                                if (shipNumbers < Constant.ships.length) {
+                                    shipSize.setText("Platziere deine Schiffe");
+                                }
+                                if (shipNumbers >= Constant.ships.length) {
+                                    setShips = false;
+                                    placementOptions.setVisible(false);
+                                }
+                            }
+                        } else {
+                            //logic.shoot(row, col);
+                        }
+                    }
+                    if (fieldRight[col][row].getButton() == e.getComponent()) {
+                        if (!setShips) {
+                            logic.shoot(col, row);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e
+    ) {
 
     }
 
     @Override
-    public void updateField(int x, int y, PlayerField field, FieldStatus status) {
+    public void updateField(int x, int y, PlayerField field, FieldStatus status
+    ) {
 
         switch (field) {
             case ENEMY:
@@ -333,7 +357,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     }
 
     @Override
-    public void gameOver(boolean won) {
+    public void gameOver(boolean won
+    ) {
         if (won) {
             JOptionPane.showMessageDialog(null, "YOU WON!");
         } else {
@@ -341,4 +366,85 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
     }
 
+    public JButton getClickedButtonLeft(MouseEvent e) {
+        JButton actualButton = new JButton();
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldLeft[col][row].getButton() == e.getComponent()) {
+                    actualButton = fieldLeft[col][row].getButton();
+                }
+            }
+        }
+        return actualButton;
+    }
+
+    public JButton getClickedButtonRight(MouseEvent e) {
+        JButton actualButton = new JButton();
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldRight[col][row].getButton() == e.getComponent()) {
+                    actualButton = fieldRight[col][row].getButton();
+                }
+            }
+        }
+        return actualButton;
+    }
+
+    public Field getClickedFieldRight(MouseEvent e) {
+        Field actualField = new Field();
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldRight[col][row].getButton() == e.getComponent()) {
+                    actualField = fieldRight[col][row];
+                }
+            }
+        }
+        return actualField;
+    }
+
+    public Field getClickedFieldLeft(MouseEvent e) {
+        Field actualField = null;
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldLeft[col][row].getButton() == e.getComponent()) {
+                    actualField = fieldLeft[col][row];
+                }
+            }
+        }
+        return actualField;
+    }
+
+    public void drawWhite() {
+        for (int row = 0; row < fieldSize; row++) {
+            for (int col = 0; col < fieldSize; col++) {
+                if (fieldLeft[col][row].getButton().getBackground() == Color.yellow) {
+                    fieldLeft[col][row].getButton().setBackground(Color.white);
+                }
+            }
+        }
+    }
+
+    public void drawHorizontal(MouseEvent e) {
+        int count = 1;
+        for (int i = actualShipSize; i > 1; i--) {
+            if (getClickedFieldLeft(e).getX() + count < fieldSize) {
+                if (fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().getBackground() != Color.black) {
+                    fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().setBackground(Color.yellow);
+                }
+            }
+            count++;
+        }
+    }
+
+    public void drawVertical(MouseEvent e) {
+        int count = 1;
+        for (int i = actualShipSize; i > 1; i--) {
+            if (getClickedFieldLeft(e).getY() + count < fieldSize) {
+                if (fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().getBackground() != Color.black) {
+                    fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().setBackground(Color.yellow);
+                }
+            }
+            count++;
+        }
+    }
 }
