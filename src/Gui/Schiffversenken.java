@@ -66,7 +66,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     private boolean setShips;
 
-    private int fieldSize = Constant.fieldSize;
+    private int fieldSize;
 
     private ILogic logic;
 
@@ -74,6 +74,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Schiffversenken() {
         super();
+        this.fieldSize = Constant.fieldSize;
+        this.sa=ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 800);
         setLayout(new GridLayout(2, 2));
@@ -127,7 +129,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         placementOptions.add(horizontal);
         vertikal.addMouseListener(this);
         horizontal.addMouseListener(this);
-        shipSize.setText("Schiffgrösse");
+        shipSize.setText("Schiffgrösse " + Constant.ships.length);
         shipSize.setFont(shipSize.getFont().deriveFont(25.0f));
         placementOptions.setVisible(true);
 
@@ -146,6 +148,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         player2.setFont(Titel1.getFont().deriveFont(25.0f));
         player2.setHorizontalAlignment(JLabel.CENTER);
 
+        System.out.println(fieldSize);
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
                 fieldLeft[col][row] = new Field(col, row);
@@ -284,8 +287,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                         }
                         else{
                             shipNumbers++;
+                            if(shipNumbers < Constant.ships.length){
+                                shipSize.setText("Schiffgrösse " + Constant.ships[shipNumbers]);
+                            }
                             if (shipNumbers >= Constant.ships.length) {
                                 setShips = false;
+                                placementOptions.setVisible(false);
                             }
                         }
                     } else {
