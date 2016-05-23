@@ -41,6 +41,11 @@ public class Logic implements ILogic,ILogicEnemy{
     }
     
     @Override
+    public void gameWin(boolean win){
+        PlayingFiled.gameOver(win);
+    }
+    
+    @Override
     public void SetNetworkconnection(IEnemy Network){
         this.Network = Network;
     }
@@ -126,6 +131,7 @@ public class Logic implements ILogic,ILogicEnemy{
                 fertig = false;
         }
         if(fertig){
+            Network.sendGameWin(true);
             PlayingFiled.gameOver(false);
         }
     }
