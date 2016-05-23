@@ -201,39 +201,38 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             logic.SetNetworkconnection((Network) network);
         }
         if (e.getSource() == mNetClient) {
-            String hostname = JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
-            //TODO: don't show this optionpane (client stop working without it)
+            //String hostname = "localhost";//JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
             //int eingabe = JOptionPane.showConfirmDialog(null, "Suche Server...", "Suche Server...", JOptionPane.CANCEL_OPTION);
 
-            if (!hostname.equals("")) {
-                NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
-                /*ClientThread client = new ClientThread(hostname, dialog);
+            //if (!hostname.equals("")) {
+            NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
+            /*ClientThread client = new ClientThread(hostname, dialog);
 
-                client.start();
+            client.start();
 
-                dialog.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        client.exitClient();
-                        dialog.setVisible(false);
-                    }
-                });*/
+            dialog.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    client.exitClient();
+                    dialog.setVisible(false);
+                }
+            });*/
 
-                network = new Network();
-                network.startClient(hostname, dialog);
+            network = new Network();
+            network.startClient(dialog);
 
-                dialog.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        network.stopClient();
-                        dialog.setVisible(false);
-                    }
-                });
+            dialog.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    network.stopClient();
+                    dialog.setVisible(false);
+                }
+            });
 
-                dialog.setVisible(true);
-                network.setLogic((Logic) logic);
-                logic.SetNetworkconnection((Network) network);
-            }
+            dialog.setVisible(true);
+            network.setLogic((Logic) logic);
+            logic.SetNetworkconnection((Network) network);
+            //}
         }
     }
 

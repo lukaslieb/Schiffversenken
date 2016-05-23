@@ -43,8 +43,7 @@ public class Network implements INetwork, IEnemy{
     }
     
     @Override
-    public boolean startClient(String hostname, JDialog dialog) {
-        this.hostname = hostname;
+    public boolean startClient(JDialog dialog) {
         try{
             hostname = discoverUDPServer();
             System.out.println("UDP Broadcast found address: "+hostname);

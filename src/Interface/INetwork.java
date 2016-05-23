@@ -12,7 +12,7 @@ import javax.swing.JDialog;
  * @author Lukas
  */
 public interface INetwork {
-    boolean startClient(String hostname, JDialog dialog);
+    boolean startClient(JDialog dialog);
 
     boolean startServer(JDialog dialog);
     
