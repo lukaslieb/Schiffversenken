@@ -20,6 +20,7 @@ public enum FieldStatus {
     UNKNOWNAREA,
     PLACESHIP,
     UNUSED,
+    COLLISION,
     SHOOT;
 
     public Color getColor() {
@@ -59,7 +60,7 @@ public enum FieldStatus {
             case "DESTROYED":
                 return DESTROYED;
             case "PREVIEW":
-                return PREVIEW;
+                return PLACESHIP;
             case "COLLISION":
                 return COLLISION;
             default:
@@ -115,6 +116,8 @@ public enum FieldStatus {
                 break;
             case SHOOT:
                 pic="/Gui/shoot.jpg";
+            case COLLISION:
+                pic="/Gui/hit.jpg";
             break;
             default:
                 pic="/Gui/placement.jpg";

@@ -12,4 +12,14 @@ package Datatypes;
 public enum ShipAlignment {
     HORIZONTAL,
     VERTICAL;
+    
+    public static ShipAlignment invertAlignment(ShipAlignment SA){
+        if(SA == ShipAlignment.HORIZONTAL){
+            return ShipAlignment.VERTICAL;
+        }
+        else{
+            return ShipAlignment.HORIZONTAL;
+        }
+    }
 }
+

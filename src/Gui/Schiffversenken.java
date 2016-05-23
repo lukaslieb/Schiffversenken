@@ -238,20 +238,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            if (sa == ShipAlignment.HORIZONTAL) {
-                sa = ShipAlignment.VERTICAL;
-                if (setShips) {
-                    drawWhite();
-                }
-                drawVertical(e);
-            } else {
-                sa = ShipAlignment.HORIZONTAL;
-                if (setShips) {
-                    drawWhite();
-                }
-                drawHorizontal(e);
-            }
+        if (e.getButton() == MouseEvent.BUTTON3 && ownField(e)) { //rechte maustaste im eigenen Feld
+            sa = ShipAlignment.invertAlignment(sa);
+            actualShipSize = Constant.ships[shipNumbers];
+            logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
     }
 
@@ -259,30 +249,15 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     public void mouseEntered(MouseEvent e) {
         if (setShips && ownField(e)) {
             actualShipSize = Constant.ships[shipNumbers];
-            if (e.getComponent().getBackground() == Color.white) {
-                switch (sa) {
-                    case HORIZONTAL:
-                        drawHorizontal(e);
-                        break;
-
-                    case VERTICAL:
-                        drawVertical(e);
-                        break;
-                }
-            }
-        } else if (setShips && !ownField(e)) {
-            if (e.getComponent().getBackground() == Color.white) {
-                updateField(getClickedFieldRight(e).getX(), getClickedFieldRight(e).getY(), PlayerField.ENEMY, FieldStatus.SHOOT);
-            }
-
+            logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (setShips) {
+        /*if (setShips) {
             drawWhite();
-        }
+        }*/
     }
 
     @Override
@@ -294,10 +269,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                     if (fieldLeft[col][row].getButton() == e.getComponent()) {
                         if (setShips) {
                             //JOptionPane.showMessageDialog(this, col + "-" + row + "-" + sa +"-"+Constant.ships[shipNumbers]);
-                            boolean collision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
-                            if (!collision) {
-                                JOptionPane.showMessageDialog(this, "Kollision beim Platzieren des Schiffes erkannt");
-                            } else {
+                            boolean nocollision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
+                            if (nocollision) { //wenn keine kollision besteht
                                 shipNumbers++;
                                 if (shipNumbers >= Constant.ships.length) {
                                     setShips = false;
@@ -403,52 +376,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         return actualField;
     }
-
-    public void drawWhite() {
-        for (int row = 0; row < fieldSize; row++) {
-            for (int col = 0; col < fieldSize; col++) {
-                if (fieldLeft[col][row].getButton().getBackground() == Color.yellow || fieldLeft[col][row].getButton().getBackground() == Color.red) {
-                    fieldLeft[col][row].getButton().setBackground(Color.white);
-                    fieldLeft[col][row].setImg(fieldLeft[col][row].getButton(), FieldStatus.UNUSED);
-                }
-                if (fieldRight[col][row].getButton().getBackground() == Color.white) {
-                    fieldRight[col][row].getButton().setBackground(Color.white);
-                    fieldRight[col][row].setImg(fieldRight[col][row].getButton(), FieldStatus.UNUSED);
-                }
-            }
-        }
-    }
-
-    public void drawHorizontal(MouseEvent e) {
-        int count = 1;
-        getClickedButtonLeft(e).setBackground(Color.yellow);
-        getClickedFieldLeft(e).setImg(fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
-        for (int i = actualShipSize; i > 1; i--) {
-            if (getClickedFieldLeft(e).getX() + count < fieldSize) {
-                if (fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().getBackground() != Color.black) {
-                    fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().setBackground(Color.yellow);
-                    getClickedFieldLeft(e).setImg(fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
-                }
-            }
-            count++;
-        }
-    }
-
-    public void drawVertical(MouseEvent e) {
-        int count = 1;
-        getClickedButtonLeft(e).setBackground(Color.yellow);
-        getClickedFieldLeft(e).setImg(fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
-        for (int i = actualShipSize; i > 1; i--) {
-            if (getClickedFieldLeft(e).getY() + count < fieldSize) {
-                if (fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().getBackground() != Color.black) {
-                    fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().setBackground(checkCollision(e, i));
-                    getClickedFieldLeft(e).setImg(fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton(), FieldStatus.PLACESHIP);
-                }
-            }
-            count++;
-        }
-    }
-
+    
     public boolean ownField(MouseEvent e) {
         boolean ownField = true;
         for (int row = 0; row < fieldSize; row++) {

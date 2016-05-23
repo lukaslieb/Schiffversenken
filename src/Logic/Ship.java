@@ -33,7 +33,7 @@ public class Ship {
     
     public void setToPreview(){
         for(ShipFields SF : placement){
-            SF.setStatus(FieldStatus.PREVIEW);
+            SF.setStatus(FieldStatus.PLACESHIP);
         }
     }
     

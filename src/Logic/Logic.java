@@ -43,15 +43,10 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public boolean setPreviewSip(int x, int y, ShipAlignment direction, int lenght){
-        
         if(previewShip != null){        //if already a ship exists delete the existing
             for(ShipFields SF : previewShip.returnShipFields()){
-                //When a collision existed set back teh ship
-                if(SF.getStatus() == FieldStatus.COLLISION){
-                    UpdateField(SF.getX(), SF.getY(), FieldStatus.SHIP);
-                }
                 //Delet the Preview Ship
-                UpdateField(SF.getX(), SF.getY(), FieldStatus.UNKNOWNAREA);
+                PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, FieldStatus.UNUSED);
             }
             for(Ship s : Ships){
                 RedrawWholeShip(s);
