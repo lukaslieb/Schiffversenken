@@ -102,7 +102,7 @@ public enum FieldStatus {
                 pic="/Gui/hit.jpg";
                 break;
             case DESTROYED:
-                pic="pic=/Gui/destroyed.jpg";
+                pic="/Gui/destroyed.jpg";
                 break;
             case UNUSED:
                 pic="/Gui/unused.jpg";
@@ -114,7 +114,7 @@ public enum FieldStatus {
                 pic="/Gui/shoot.jpg";
             break;
             default:
-                pic="error";
+                pic="/Gui/placement.jpg";
 
         }
         return pic;
