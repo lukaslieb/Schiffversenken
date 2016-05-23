@@ -48,7 +48,7 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public boolean setShip(int x, int y, ShipAlignment direction, int lenght){
         Ship newShip = new Ship(x, y, direction, lenght);
-        //When the Sips are not empty do collision detection
+        //When the Ships are not empty do collision detection
         if(!Ships.isEmpty()){
             for(ShipFields SF : newShip.returnShipFields()){
                 for(Ship s : Ships){
