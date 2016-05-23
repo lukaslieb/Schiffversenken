@@ -28,4 +28,8 @@ public interface ILogicEnemy {
     void shootReply(int x, int y, FieldStatus status);
     
     void gameWin(boolean win);
+    
+    void UpdateField(int x, int y, FieldStatus status);
+    
+    void setReady();
 }

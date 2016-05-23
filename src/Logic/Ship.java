@@ -29,10 +29,13 @@ public class Ship {
         this.length = length;
         checkPos();
         CreateShip();
-        
-    }
-
+    } 
     
+    public void setToPreview(){
+        for(ShipFields SF : placement){
+            SF.setStatus(FieldStatus.PREVIEW);
+        }
+    }
     
     private void checkPos(){
         switch(align){

@@ -28,5 +28,7 @@ public interface ILogic {
      */
     boolean setShip(int x, int y, ShipAlignment direction, int length);
     
+    boolean setPreviewSip(int x, int y, ShipAlignment direction, int lenght);
+    
     void SetNetworkconnection(IEnemy Network);
 }

@@ -24,6 +24,7 @@ public class Logic implements ILogic,ILogicEnemy{
     private IPlayingField PlayingFiled;
     private IEnemy Network;
     private ArrayList<Ship> Ships = new ArrayList<Ship>();
+    private Ship previewShip;
     private FieldStatus[][] WaterField = new FieldStatus[Constant.fieldSize][Constant.fieldSize]; 
     boolean AmZug = true;
     
@@ -38,6 +39,55 @@ public class Logic implements ILogic,ILogicEnemy{
     
     public void setPlayField(IPlayingField PlayingField){
         this.PlayingFiled = PlayingField;
+    }
+    
+    @Override
+    public boolean setPreviewSip(int x, int y, ShipAlignment direction, int lenght){
+        
+        if(previewShip != null){        //if already a ship exists delete the existing
+            for(ShipFields SF : previewShip.returnShipFields()){
+                //When a collision existed set back teh ship
+                if(SF.getStatus() == FieldStatus.COLLISION){
+                    UpdateField(SF.getX(), SF.getY(), FieldStatus.SHIP);
+                }
+                //Delet the Preview Ship
+                UpdateField(SF.getX(), SF.getY(), FieldStatus.UNKNOWNAREA);
+            }
+            for(Ship s : Ships){
+                RedrawWholeShip(s);
+            }
+        }
+        //TODO draw new ship
+        previewShip = new Ship(x,y,direction,lenght);
+        previewShip.setToPreview();
+        for(ShipFields SF : previewShip.returnShipFields()){
+            for(Ship s : Ships){
+                if(s.isCollision(SF.getX(), SF.getY())){
+                    SF.setStatus(FieldStatus.COLLISION); //TODO test wether it really changes the ship class!!!!
+                }
+            }
+        }
+        RedrawWholeShip(previewShip);
+        return true;
+    }
+    
+    @Override
+    public void UpdateField(int x, int y, FieldStatus status){
+        if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
+            AmZug = true;
+        }
+        else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
+            AmZug = true;
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
+        }
+        else{
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
+        }
+    }
+    
+    @Override
+    public void setReady(){
+        AmZug = true;
     }
     
     @Override
@@ -63,7 +113,7 @@ public class Logic implements ILogic,ILogicEnemy{
                 }
             }
         }
-        UpdateWholeShip(newShip);
+        RedrawWholeShip(newShip);
         Ships.add(newShip); //Add ship to the list
         return true;
     }
@@ -80,16 +130,7 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public void shootReply(int x, int y, FieldStatus status){
-        if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
-            AmZug = true;
-        }
-        else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
-            AmZug = true;
-            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
-        }
-        else{
-            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
-        }
+        UpdateField(x,y,status);
     }
     
     @Override
@@ -100,7 +141,7 @@ public class Logic implements ILogic,ILogicEnemy{
             if(status != FieldStatus.UNKNOWNAREA){
                 if(FieldStatus.ALLREADYHIT != status){
                     if(status == FieldStatus.DESTROYED){
-                        UpdateWholeShip(s);
+                        RedrawWholeShip(s);
                         TestWin();
                     }
                     PlayingFiled.updateField(x, y, PlayerField.OWN, status);
@@ -118,8 +159,9 @@ public class Logic implements ILogic,ILogicEnemy{
         return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
     }
     
-    private void UpdateWholeShip(Ship s){
+    private void RedrawWholeShip(Ship s){
         for(ShipFields SF : s.returnShipFields()){
+            //TODO send datas thorugh network in new function
             PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, SF.getStatus());
         }
     }

@@ -17,6 +17,8 @@ public enum FieldStatus {
     HIT,
     DESTROYED,
     ALLREADYHIT,
+    PREVIEW,
+    COLLISION,
     UNKNOWNAREA;
     
     public Color getColor(){
@@ -34,9 +36,16 @@ public enum FieldStatus {
             case DESTROYED:
                 color = Color.GRAY;
                 break;
+            case PREVIEW:
+                color = Color.YELLOW;
+                break;
+            case COLLISION:
+                color = Color.RED;
+                break;
+            case UNKNOWNAREA:
             default:
                 color = Color.WHITE;
-                
+                break;
         }
         return color;
     }
@@ -51,6 +60,10 @@ public enum FieldStatus {
                 return HIT;
             case "DESTROYED":
                 return DESTROYED;
+            case "PREVIEW":
+                return PREVIEW;
+            case "COLLISION":
+                return COLLISION;
             default:
                 return UNKNOWNAREA;   
         }
