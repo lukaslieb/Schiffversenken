@@ -17,10 +17,16 @@ import Network.Network;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,6 +35,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -62,6 +69,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private int shipNumbers;
     private ShipAlignment sa;
     private int actualShipSize;
+    private ImageIcon t1 = new ImageIcon(getClass().getResource("/Gui/titleimage.jpg"));
+    private ImageIcon t2 = new ImageIcon(getClass().getResource("/Gui/titleimage2.jpg"));
+    private JLabel leftTopLabel = new JLabel();
+    private JLabel rightTopLabel = new JLabel();
+   
+    
 
     private boolean setShips;
 
@@ -78,6 +91,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 800);
         setLayout(new GridLayout(2, 2, 10, 10));
+        getContentPane().setBackground(Color.black);
         this.fieldLeft = new Field[fieldSize][fieldSize];
         this.fieldRight = new Field[fieldSize][fieldSize];
         this.setShips = true;
@@ -111,44 +125,25 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         add(rightPanel);
 
         leftPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));
-        rightPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));
-        placementOptions.setLayout(new GridLayout(2, 2));
-        leftTopPanel.setLayout(new BorderLayout());
-        rightTopPanel.setLayout(new BorderLayout());
+        rightPanel.setLayout(new GridLayout(fieldSize, fieldSize, 0, 0));        
 
-        leftTopPanel.add(Titel1, BorderLayout.NORTH);
-        Titel1.setText("SCHIFFE");
-        Titel1.setFont(Titel1.getFont().deriveFont(40.0f));
-        Titel1.setHorizontalAlignment(JLabel.RIGHT);
+        leftPanel.setBackground(Color.black);
+        rightPanel.setBackground(Color.black);
+        rightTopPanel.setBackground(Color.black);
+        leftTopPanel.setBackground(Color.black);
+        leftTopPanel.add(Titel1);
+        leftTopLabel.setIcon(t2);
+        rightTopLabel.setIcon(t1);
+        leftTopPanel.add(leftTopLabel);
+        rightTopPanel.add(rightTopLabel);
+        
+        
 
-        leftTopPanel.add(placementOptions);
-        placementOptions.add(shipSize);
-        placementOptions.add(shipCount);
-        shipSize.setText("Platziere deine Schiffe");
-        shipSize.setFont(shipSize.getFont().deriveFont(25.0f));
-        placementOptions.setVisible(true);
-
-        rightTopPanel.add(Titel2, BorderLayout.NORTH);
-        Titel2.setText("VERSENKEN");
-        Titel2.setFont(Titel1.getFont().deriveFont(40.0f));
-        Titel2.setHorizontalAlignment(JLabel.LEFT);
-
-        leftTopPanel.add(player1, BorderLayout.SOUTH);
-        player1.setText("Player 1");
-        player1.setFont(Titel1.getFont().deriveFont(25.0f));
-        player1.setHorizontalAlignment(JLabel.CENTER);
-
-        rightTopPanel.add(player2, BorderLayout.SOUTH);
-        player2.setText("Player 2");
-        player2.setFont(Titel1.getFont().deriveFont(25.0f));
-        player2.setHorizontalAlignment(JLabel.CENTER);
-
-        System.out.println(fieldSize);
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
                 fieldLeft[col][row] = new Field(col, row);
                 fieldLeft[col][row].getButton().addMouseListener(this);
-                fieldLeft[col][row].getButton().setBackground(Color.white);
+                updateField(col, row, PlayerField.OWN, FieldStatus.UNUSED);
                 leftPanel.add(fieldLeft[col][row].getButton());
             }
         }
@@ -157,11 +152,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             for (int col = 0; col < fieldSize; col++) {
                 fieldRight[col][row] = new Field(col, row);
                 fieldRight[col][row].getButton().addMouseListener(this);
-                fieldRight[col][row].getButton().setBackground(Color.white);
+                updateField(col, row, PlayerField.ENEMY, FieldStatus.UNUSED);
                 rightPanel.add(fieldRight[col][row].getButton());
             }
         }
-
         setVisible(true);
     }
 
@@ -252,19 +246,16 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 sa = ShipAlignment.VERTICAL;
                 if (setShips) {
                     drawWhite();
-                }
-                getClickedButtonLeft(e).setBackground(Color.yellow);
+                }           
                 drawVertical(e);
             } else {
                 sa = ShipAlignment.HORIZONTAL;
                 if (setShips) {
                     drawWhite();
-                }
-                getClickedButtonLeft(e).setBackground(Color.yellow);
+                }      
                 drawHorizontal(e);
             }
         }
-
     }
 
     @Override
@@ -272,7 +263,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         if (setShips && ownField(e)) {
             actualShipSize = Constant.ships[shipNumbers];
             if (e.getComponent().getBackground() == Color.white) {
-                getClickedButtonLeft(e).setBackground(Color.yellow);
                 switch (sa) {
                     case HORIZONTAL:
                         drawHorizontal(e);
@@ -283,6 +273,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                         break;
                 }
             }
+        }
+        else if (setShips && !ownField(e)){
+            if(e.getComponent().getBackground() == Color.white){
+                updateField(getClickedFieldRight(e).getX(), getClickedFieldRight(e).getY(), PlayerField.ENEMY, FieldStatus.SHOOT);
+            }
+            
         }
     }
 
@@ -307,12 +303,9 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                                 JOptionPane.showMessageDialog(this, "Kollision beim Platzieren des Schiffes erkannt");
                             } else {
                                 shipNumbers++;
-                                if (shipNumbers < Constant.ships.length) {
-                                    shipSize.setText("Platziere deine Schiffe");
-                                }
                                 if (shipNumbers >= Constant.ships.length) {
                                     setShips = false;
-                                    placementOptions.setVisible(false);
+                                    //placementOptions.setVisible(false);
                                 }
                             }
                         } else {
@@ -342,11 +335,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
         switch (field) {
             case ENEMY:
-                this.fieldRight[x][y].getButton().setBackground(status.getColor());
+                    this.fieldRight[x][y].getButton().setBackground(status.getColor());
+                    this.fieldRight [x] [y].setImg(this.fieldRight [x] [y].getButton(), status);
                 break;
 
             case OWN:
-                this.fieldLeft[x][y].getButton().setBackground(status.getColor());
+                    this.fieldLeft[x][y].getButton().setBackground(status.getColor());
+                    this.fieldLeft [x] [y].setImg(this.fieldLeft [x] [y].getButton(), status);
                 break;
 
             default:
@@ -416,8 +411,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     public void drawWhite() {
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                if (fieldLeft[col][row].getButton().getBackground() == Color.yellow) {
+                if (fieldLeft[col][row].getButton().getBackground() == Color.yellow || fieldLeft[col][row].getButton().getBackground() == Color.red) {
                     fieldLeft[col][row].getButton().setBackground(Color.white);
+                    fieldLeft [col] [row].setImg(fieldLeft [col] [row].getButton(), FieldStatus.UNUSED);
+                }
+                if (fieldRight[col][row].getButton().getBackground() == Color.white) {
+                    fieldRight[col][row].getButton().setBackground(Color.white);
+                    fieldRight [col] [row].setImg(fieldRight [col] [row].getButton(), FieldStatus.UNUSED);
                 }
             }
         }
@@ -425,10 +425,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public void drawHorizontal(MouseEvent e) {
         int count = 1;
+        getClickedButtonLeft(e).setBackground(Color.yellow);
+        getClickedFieldLeft(e).setImg(fieldLeft [getClickedFieldLeft(e).getX()] [getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
         for (int i = actualShipSize; i > 1; i--) {
             if (getClickedFieldLeft(e).getX() + count < fieldSize) {
                 if (fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().getBackground() != Color.black) {
                     fieldLeft[getClickedFieldLeft(e).getX() + count][getClickedFieldLeft(e).getY()].getButton().setBackground(Color.yellow);
+                    getClickedFieldLeft(e).setImg(fieldLeft [getClickedFieldLeft(e).getX()+count] [getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
                 }
             }
             count++;
@@ -437,17 +440,20 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public void drawVertical(MouseEvent e) {
         int count = 1;
+        getClickedButtonLeft(e).setBackground(Color.yellow);
+        getClickedFieldLeft(e).setImg(fieldLeft [getClickedFieldLeft(e).getX()] [getClickedFieldLeft(e).getY()].getButton(), FieldStatus.PLACESHIP);
         for (int i = actualShipSize; i > 1; i--) {
             if (getClickedFieldLeft(e).getY() + count < fieldSize) {
                 if (fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().getBackground() != Color.black) {
-                    fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().setBackground(Color.yellow);
+                    fieldLeft[getClickedFieldLeft(e).getX()][getClickedFieldLeft(e).getY() + count].getButton().setBackground(checkCollision(e, i));
+                    getClickedFieldLeft(e).setImg(fieldLeft [getClickedFieldLeft(e).getX()] [getClickedFieldLeft(e).getY()+count].getButton(), FieldStatus.PLACESHIP);
                 }
             }
             count++;
         }
     }
-    
-    public boolean ownField(MouseEvent e){
+
+    public boolean ownField(MouseEvent e) {
         boolean ownField = true;
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
@@ -456,8 +462,20 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 }
             }
         }
-        
-        
         return ownField;
+    }
+    
+    public Color checkCollision(MouseEvent e, int size){
+        Color c;
+        //boolean checkCollision = logic.setShip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, size);
+        boolean checkCollision = true;
+        //System.out.println(checkCollision);
+        if(!checkCollision){
+            c = Color.red;
+        }
+        else{
+            c = Color.yellow;
+        }
+        return c;
     }
 }
