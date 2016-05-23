@@ -213,6 +213,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         if (e.getSource() == mNetClient) {
             String hostname = JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
+            //TODO: don't show this optionpane (client stop working without it)
+            //int eingabe = JOptionPane.showConfirmDialog(null, "Suche Server...", "Suche Server...", JOptionPane.CANCEL_OPTION);
 
             if (!hostname.equals("")) {
                 NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
