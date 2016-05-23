@@ -102,7 +102,7 @@ public enum FieldStatus {
                 pic="/Gui/hit.jpg";
                 break;
             case DESTROYED:
-                pic="pic=\"/Gui/destroyed.jpg\";";
+                pic="pic=/Gui/destroyed.jpg";
                 break;
             case UNUSED:
                 pic="/Gui/unused.jpg";
