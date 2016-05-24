@@ -9,6 +9,7 @@ import Datatypes.FieldStatus;
 import Datatypes.ShipAlignment;
 import Datatypes.Constant;
 import Datatypes.PlayerField;
+import Gui.Schiffversenken;
 import Interface.IEnemy;
 import Interface.ILogic;
 import Interface.ILogicEnemy;
@@ -131,6 +132,12 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public void shootReply(int x, int y, FieldStatus status){
         UpdateField(x,y,status);
+        if(status==FieldStatus.HIT || status==FieldStatus.DESTROYED){
+            Schiffversenken.soundHit();
+        }
+        if(status==FieldStatus.WATER){
+            Schiffversenken.soundWater();
+        }
     }
     
     @Override
