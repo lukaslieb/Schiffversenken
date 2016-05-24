@@ -31,5 +31,11 @@ public interface ILogicEnemy {
     
     void UpdateField(int x, int y, FieldStatus status);
     
+    /**
+    * This function send wether the reciever is startplayer or not
+    * @param firstPlayer = true="reciever is first player", false=reciever does not strat
+    */
+    void setFirstPlayer(boolean firstPlayer);
+    
     void setReady();
 }
