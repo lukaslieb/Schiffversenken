@@ -159,7 +159,6 @@ public class Network implements INetwork, IEnemy{
         boolean win;
         boolean firstPlayer;
         FieldStatus status;
-        PlayerField playingfield;
         switch(obj.getInt("type")){
             case 1:
                 x = obj.getInt("x");
@@ -186,8 +185,8 @@ public class Network implements INetwork, IEnemy{
             case 5:
                 x = obj.getInt("x");
                 y = obj.getInt("y");
-                playingfield = PlayerField.getEnumState(obj.getString("playerField"));
-                //logic.UpdateField(x, y, playingfield);
+                status = FieldStatus.getEnumState(obj.getString("status"));
+                logic.UpdateField(x, y, status);
                 break;
             case 6:
                 System.out.println(obj.getString("message"));
