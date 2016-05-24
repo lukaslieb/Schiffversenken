@@ -181,5 +181,6 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public void setFirstPlayer(boolean firstPlayer) {
         AmZug = firstPlayer;
+        PlayingFiled.myTurn(AmZug);
     }
 }
