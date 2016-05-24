@@ -94,7 +94,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Schiffversenken() {
         super();
-        startBGMusic();
         this.fieldSize = Constant.fieldSize;
         this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -233,20 +232,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
     }
 
-   public static void startBGMusic(){
-       AudioPlayer MGP = AudioPlayer.player;
-       AudioStream BGM;
-       AudioData MD;
-       ContinuousAudioDataStream loop = null;
-       try{
-       BGM = new AudioStream(new FileInputStream("/Gui.Music/bgmusic.wav"));
-       MD = BGM.getData();
-       loop = new ContinuousAudioDataStream(MD);
-       }catch(IOException error){
-       System.out.println("file not found");
-       }
-       MGP.start(loop);
-   }
+  
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -260,7 +246,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseEntered(MouseEvent e) {
-               startBGMusic();
         if (setShips && ownField(e) && holdLeftMouse == false) {
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
