@@ -12,21 +12,17 @@ import Datatypes.ShipAlignment;
 import Interface.ILogic;
 import Interface.INetwork;
 import Interface.IPlayingField;
+import Logic.KI;
 import Logic.Logic;
 import Network.Network;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -81,6 +77,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private ILogic logic;
 
     private INetwork network = null;
+    
+    private KI ki;
 
     public Schiffversenken() {
         super();
@@ -169,6 +167,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         if (e.getSource() == mNewLocal) {
             JOptionPane.showMessageDialog(this, "Not implementet right now");
+            ki = new KI();
+            logic.SetNetworkconnection(ki);
+            ki.setLogic((Logic)logic);
+            
         }
         if (e.getSource() == mNetHost) {
             NetworkHost dialog = new NetworkHost(this, "Warte auf Spieler");

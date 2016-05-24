@@ -35,6 +35,40 @@ public class Logic implements ILogic,ILogicEnemy{
             }
         }
     }
+
+    public IEnemy getNetwork() {
+        return Network;
+    }
+
+    public void setNetwork(IEnemy Network) {
+        this.Network = Network;
+    }
+
+    public ArrayList<Ship> getShips() {
+        return Ships;
+    }
+
+    public void setShips(ArrayList<Ship> Ships) {
+        this.Ships = Ships;
+    }
+
+    public FieldStatus[][] getWaterField() {
+        return WaterField;
+    }
+
+    public void setWaterField(FieldStatus[][] WaterField) {
+        this.WaterField = WaterField;
+    }
+
+    public boolean isAmZug() {
+        return AmZug;
+    }
+
+    public void setAmZug(boolean AmZug) {
+        this.AmZug = AmZug;
+    }
+    
+    
     
     public void setPlayField(IPlayingField PlayingField){
         this.PlayingFiled = PlayingField;
