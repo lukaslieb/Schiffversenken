@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -36,6 +37,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+import sun.audio.AudioData;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
 
 /**
  *
@@ -88,6 +93,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Schiffversenken() {
         super();
+        startBGMusic();
         this.fieldSize = Constant.fieldSize;
         this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -242,6 +248,21 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
     }
 
+   public static void startBGMusic(){
+       AudioPlayer MGP = AudioPlayer.player;
+       AudioStream BGM;
+       AudioData MD;
+       ContinuousAudioDataStream loop = null;
+       try{
+       BGM = new AudioStream(new FileInputStream("/Gui.Music/bgmusic.wav"));
+       MD = BGM.getData();
+       loop = new ContinuousAudioDataStream(MD);
+       }catch(IOException error){
+       System.out.println("file not found");
+       }
+       MGP.start(loop);
+   }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3 && ownField(e)) { //rechte maustaste im eigenen Feld
@@ -254,6 +275,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseEntered(MouseEvent e) {
+               startBGMusic();
         if (setShips && ownField(e) && holdLeftMouse == false) {
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
@@ -304,15 +326,18 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
     }
 
-    @Override 
-    public void myTurn(boolean myTurn){
-        if(myTurn){
+    @Override
+    public void myTurn(boolean myTurn) {
+        if (myTurn) {
             leftTopLabel.setIcon(t1MyTurn);
+            rightTopLabel.setIcon(t2);
+
+        } else {
+            leftTopLabel.setIcon(t1);
             rightTopLabel.setIcon(t2EnemyTurn);
-            
         }
     }
-    
+
     @Override
     public void updateField(int x, int y, PlayerField field, FieldStatus status
     ) {
