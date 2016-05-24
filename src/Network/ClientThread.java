@@ -36,6 +36,7 @@ public class ClientThread extends Thread{
     }
     
     @Override
+    @SuppressWarnings("empty-statement")
     public void run(){
         try{
             while(!connected && !exit){

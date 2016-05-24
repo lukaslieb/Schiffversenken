@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import org.json.JSONObject;
 import Datatypes.FieldStatus;
 import Datatypes.PlayerField;
+import Logic.FirstPlayer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -107,6 +108,13 @@ public class Network implements INetwork, IEnemy{
         writer = new NetworkWriter(socket);
         new Thread(reader).start(); 
     }
+    
+    @Override
+    public void getServerStatus(){
+        while(socket == null);
+        while(writer == null);
+        while(reader == null);
+    }
 
     @Override
     public void sendMoveToEnemy(int x, int y) {
@@ -172,13 +180,14 @@ public class Network implements INetwork, IEnemy{
                 break;
             case 4:
                 firstPlayer = obj.getBoolean("firstPlayer");
+                //while(logic == null);
                 logic.setFirstPlayer(firstPlayer);
                 break;
             case 5:
                 x = obj.getInt("x");
                 y = obj.getInt("y");
                 playingfield = PlayerField.getEnumState(obj.getString("playerField"));
-                logic.UpdateField(x, y, playingfield);
+                //logic.UpdateField(x, y, playingfield);
                 break;
             case 6:
                 System.out.println(obj.getString("message"));

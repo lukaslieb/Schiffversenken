@@ -27,4 +27,6 @@ public interface INetwork {
     * @param firstPlayer = true="reciever is first player", false=reciever does not strat
     */
     void sendFirstPlayer(boolean firstPlayer);
+    
+    void getServerStatus();
 }

@@ -196,6 +196,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
             
+            network.getServerStatus(); //wait until the network is connected
             //define starting Player (true = local, false = enemy)
             boolean firstPlayer = FirstPlayer.getFirstPlayer();//this function returns true if the local player starts
             network.sendFirstPlayer(!firstPlayer);
@@ -216,9 +217,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                 }
             });
 
-            dialog.setVisible(true);
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
+            
+            dialog.setVisible(true);
+            
+            network.getServerStatus();
+            dialog.setVisible(false);
         }
     }
 
