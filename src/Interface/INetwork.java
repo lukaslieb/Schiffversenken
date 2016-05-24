@@ -21,4 +21,10 @@ public interface INetwork {
     boolean stopServer();
     
     void setLogic(ILogicEnemy logic);
+    
+    /**
+    * This function send wether the reciever is startplayer or not
+    * @param firstPlayer = true="reciever is first player", false=reciever does not strat
+    */
+    void sendFirstPlayer(boolean firstPlayer);
 }

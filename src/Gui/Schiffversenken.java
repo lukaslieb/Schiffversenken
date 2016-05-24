@@ -12,6 +12,7 @@ import Datatypes.ShipAlignment;
 import Interface.ILogic;
 import Interface.INetwork;
 import Interface.IPlayingField;
+import Logic.FirstPlayer;
 import Logic.Logic;
 import Network.Network;
 import java.awt.BorderLayout;
@@ -205,6 +206,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             dialog.setVisible(true);
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
+            network.sendFirstPlayer(FirstPlayer.getFirstPlayer());
         }
         if (e.getSource() == mNetClient) {
             //String hostname = "localhost";//JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
