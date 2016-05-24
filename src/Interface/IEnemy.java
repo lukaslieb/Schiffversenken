@@ -5,6 +5,7 @@
  */
 package Interface;
 import Datatypes.FieldStatus;
+import Datatypes.PlayerField;
 
 /**
  * This interface define the methods how to communicate with the enemy (computer or network player).
@@ -29,4 +30,18 @@ public interface IEnemy {
      * @param msg = String Message
      */
     void comWithEnemy(String msg);
+    
+    /**
+    * This function send wether the reciever is startplayer or not
+    * @param firstPlayer = true="reciever is first player", false=reciever does not strat
+    */
+    void sendFirstPlayer(boolean firstPlayer);
+    
+    /**
+     * 
+     * @param x = x-coordinate
+     * @param y = y coordinate
+     * @param playingfield = value of the field to update
+     */
+    void UpdateEnemyField(int x, int y, PlayerField playingfield);
 }
