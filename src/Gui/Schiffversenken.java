@@ -138,7 +138,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         rightTopPanel.setBackground(Color.black);
         leftTopPanel.setBackground(Color.black);
         //leftTopPanel.add(Titel1);
-        leftTopLabel.setIcon(t1MyTurn);
+        leftTopLabel.setIcon(t1);
         rightTopLabel.setIcon(t2);
         leftTopPanel.add(leftTopLabel);
         rightTopPanel.add(rightTopLabel);
