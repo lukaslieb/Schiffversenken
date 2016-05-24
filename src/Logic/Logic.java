@@ -70,10 +70,12 @@ public class Logic implements ILogic,ILogicEnemy{
     public void UpdateField(int x, int y, FieldStatus status){
         if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
             AmZug = true;
+            PlayingFiled.myTurn(AmZug);
         }
         else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
             AmZug = true;
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
+            PlayingFiled.myTurn(AmZug);
         }
         else{
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
@@ -83,6 +85,7 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public void setReady(){
         AmZug = true;
+        PlayingFiled.myTurn(AmZug);
     }
     
     @Override
@@ -118,6 +121,7 @@ public class Logic implements ILogic,ILogicEnemy{
         if(AmZug){
             AmZug = false;
             Network.sendMoveToEnemy(x, y);
+            PlayingFiled.myTurn(AmZug);
             return true;
         }
         return false;
@@ -149,6 +153,7 @@ public class Logic implements ILogic,ILogicEnemy{
             accepted = true;
             PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
             AmZug = true;                //if he hits water his turn ends and you starts
+            PlayingFiled.myTurn(AmZug);
             return FieldStatus.WATER;    //return new Status
         }
         return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
