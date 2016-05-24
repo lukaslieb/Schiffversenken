@@ -86,8 +86,19 @@ public enum FieldStatus {
             case "UNUSED":
                 s="/Gui/Picture/unused.jpg";
                 break;
-            default:
+           case "PLACESHIP":
+                s="/Gui/Picture/placement.jpg";
+                break;
+            case "SHOOT":
+                s="/Gui/Picture/shoot.jpg";
+            case "COLLISION":
+                s="/Gui/Picture/destroyed.jpg";
+            break;
+            case "ALLREADYHIT":
                 s="/Gui/Picture/unused.jpg";
+            break;
+            default:
+                s="/Gui/Picture/placement.jpg";
 
         }
         return s;
@@ -118,6 +129,9 @@ public enum FieldStatus {
                 pic="/Gui/Picture/shoot.jpg";
             case COLLISION:
                 pic="/Gui/Picture/destroyed.jpg";
+            break;
+            case ALLREADYHIT:
+                pic="/Gui/Picture/unused.jpg";
             break;
             default:
                 pic="/Gui/Picture/placement.jpg";
