@@ -15,6 +15,7 @@ import Interface.IPlayingField;
 import Logic.FirstPlayer;
 import Logic.Logic;
 import Network.Network;
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -38,6 +39,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+import java.applet.AudioClip;
+import java.net.URL;
 
 /**
  *
@@ -79,6 +82,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JLabel rightTopLabel = new JLabel();
     private boolean holdLeftMouse;
     private boolean preview;
+    
+    private AudioClip placeShip;
+    private static AudioClip hit;
+    private static AudioClip water;
 
     private boolean setShips;
 
@@ -93,7 +100,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         this.fieldSize = Constant.fieldSize;
         this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 800);
+        setSize(795, 795);
+        setResizable(false);
         setLayout(new GridLayout(2, 2, 10, 10));
         getContentPane().setBackground(Color.black);
         this.fieldLeft = new Field[fieldSize][fieldSize];
@@ -161,6 +169,24 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             }
         }
         setVisible(true);
+    }
+    
+    public  void soundPlaceShip() {
+        URL urlLine = getClass().getResource("/Gui/Music/placeShip.wav");
+        placeShip = Applet.newAudioClip(urlLine);
+        placeShip.play();
+    }
+    
+    public static  void soundHit() {
+        URL urlLine = Schiffversenken.class.getResource("/Gui/Music/hit.wav");
+        hit = Applet.newAudioClip(urlLine);
+        hit.play();
+    }
+    
+    public static  void soundWater() {
+        URL urlLine = Schiffversenken.class.getResource("/Gui/Music/water.wav");
+        water = Applet.newAudioClip(urlLine);
+        water.play();
     }
 
     public void setLogic(ILogic logic) {
@@ -265,6 +291,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                             boolean nocollision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
                             if (nocollision) { //wenn keine kollision besteht
                                 shipNumbers++;
+                                this.soundPlaceShip();
                                 if (shipNumbers >= Constant.ships.length) {
                                     setShips = false;
                                     //placementOptions.setVisible(false);

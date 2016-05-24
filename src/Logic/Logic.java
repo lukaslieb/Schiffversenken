@@ -76,6 +76,7 @@ public class Logic implements ILogic,ILogicEnemy{
             AmZug = true;
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
             PlayingFiled.myTurn(AmZug);
+            
         }
         else{
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
