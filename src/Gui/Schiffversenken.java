@@ -69,10 +69,14 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private int shipNumbers;
     private ShipAlignment sa;
     private int actualShipSize;
-    private ImageIcon t1 = new ImageIcon(getClass().getResource("/Gui/titleimage.jpg"));
-    private ImageIcon t2 = new ImageIcon(getClass().getResource("/Gui/titleimage2.jpg"));
+    private ImageIcon t1 = new ImageIcon(getClass().getResource("/Gui/Picture/titleimage.jpg"));
+    private ImageIcon t2 = new ImageIcon(getClass().getResource("/Gui/Picture/titleimage2.jpg"));
+    private ImageIcon t1MyTurn = new ImageIcon(getClass().getResource("/Gui/Picture/titleimageMyTurn.jpg"));
+    private ImageIcon t2EnemyTurn = new ImageIcon(getClass().getResource("/Gui/Picture/titleimage2EnemyTurn.jpg"));
     private JLabel leftTopLabel = new JLabel();
     private JLabel rightTopLabel = new JLabel();
+    private boolean holdLeftMouse;
+    private boolean preview;
 
     private boolean setShips;
 
@@ -94,6 +98,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         this.fieldRight = new Field[fieldSize][fieldSize];
         this.setShips = true;
         this.shipNumbers = 0;
+        holdLeftMouse = false;
+        preview = false;
 
         mNewNet.add(mNetHost);
         mNewNet.add(mNetClient);
@@ -130,8 +136,8 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         rightTopPanel.setBackground(Color.black);
         leftTopPanel.setBackground(Color.black);
         leftTopPanel.add(Titel1);
-        leftTopLabel.setIcon(t2);
-        rightTopLabel.setIcon(t1);
+        leftTopLabel.setIcon(t1);
+        rightTopLabel.setIcon(t2);
         leftTopPanel.add(leftTopLabel);
         rightTopPanel.add(rightTopLabel);
 
@@ -243,11 +249,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (setShips && ownField(e)) {
+        if (setShips && ownField(e) && holdLeftMouse == false) {
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
@@ -255,14 +262,12 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseExited(MouseEvent e) {
-        /*if (setShips) {
-            drawWhite();
-        }*/
+
     }
 
     @Override
-    public void mouseReleased(MouseEvent e
-    ) {
+    public void mouseReleased(MouseEvent e) {
+        holdLeftMouse = false;
         if (e.getButton() == MouseEvent.BUTTON1) {
             for (int row = 0; row < fieldSize; row++) {
                 for (int col = 0; col < fieldSize; col++) {
@@ -293,11 +298,21 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     }
 
     @Override
-    public void mousePressed(MouseEvent e
-    ) {
-
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1 && ownField(e) && setShips) {
+            holdLeftMouse = true;
+        }
     }
 
+    @Override 
+    public void myTurn(boolean myTurn){
+        if(myTurn){
+            leftTopLabel.setIcon(t1MyTurn);
+            rightTopLabel.setIcon(t2EnemyTurn);
+            
+        }
+    }
+    
     @Override
     public void updateField(int x, int y, PlayerField field, FieldStatus status
     ) {
@@ -376,7 +391,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         return actualField;
     }
-    
+
     public boolean ownField(MouseEvent e) {
         boolean ownField = true;
         for (int row = 0; row < fieldSize; row++) {

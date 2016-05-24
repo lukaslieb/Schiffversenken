@@ -26,4 +26,10 @@ public interface IPlayingField {
      * @param won -> true = won, false = lose
      */
     void gameOver(boolean won);
+    
+    /**
+     * This function changes the title image to show how can shoot
+     * @param myTurn -> true = myTurn, false = enemyTurn
+     */
+    void myTurn(boolean myTurn);
 }

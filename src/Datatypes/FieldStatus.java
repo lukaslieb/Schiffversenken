@@ -72,22 +72,22 @@ public enum FieldStatus {
         String s;
         switch (state) {
             case "WATER":
-                s="/Gui/water.jpg";
+                s="/Gui/Picture/water.jpg";
                 break;
             case "SHIP":
-                s="/Gui/ship.jpg";
+                s="/Gui/Picture/ship.jpg";
                 break;
             case "HIT":
-                s="/Gui/hit.jpg";
+                s="/Gui/Picture/hit.jpg";
                 break;
             case "DESTROYED":
-                s="";
+                s="/Gui/Picture/destroyed.jpg";
                 break;
             case "UNUSED":
-                s="/Gui/unused.jpg";
+                s="/Gui/Picture/unused.jpg";
                 break;
             default:
-                s="error";
+                s="/Gui/Picture/unused.jpg";
 
         }
         return s;
@@ -97,30 +97,30 @@ public enum FieldStatus {
         String pic;
         switch (status) {
             case WATER:
-                pic="/Gui/water.jpg";
+                pic="/Gui/Picture/water.jpg";
                 break;
             case SHIP:
-                pic="/Gui/ship.jpg";
+                pic="/Gui/Picture/ship.jpg";
                 break;
             case HIT:
-                pic="/Gui/hit.jpg";
+                pic="/Gui/Picture/hit.jpg";
                 break;
             case DESTROYED:
-                pic="/Gui/destroyed.jpg";
+                pic="/Gui/Picture/destroyed.jpg";
                 break;
             case UNUSED:
-                pic="/Gui/unused.jpg";
+                pic="/Gui/Picture/unused.jpg";
                 break;
             case PLACESHIP:
-                pic="/Gui/placement.jpg";
+                pic="/Gui/Picture/placement.jpg";
                 break;
             case SHOOT:
-                pic="/Gui/shoot.jpg";
+                pic="/Gui/Picture/shoot.jpg";
             case COLLISION:
-                pic="/Gui/hit.jpg";
+                pic="/Gui/Picture/destroyed.jpg";
             break;
             default:
-                pic="/Gui/placement.jpg";
+                pic="/Gui/Picture/placement.jpg";
 
         }
         return pic;
