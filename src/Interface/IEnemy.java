@@ -41,7 +41,7 @@ public interface IEnemy {
      * 
      * @param x = x-coordinate
      * @param y = y coordinate
-     * @param playingfield = value of the field to update
+     * @param status = value of the field to update
      */
-    void UpdateEnemyField(int x, int y, PlayerField playingfield);
+    void UpdateEnemyField(int x, int y, FieldStatus status);
 }

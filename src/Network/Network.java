@@ -139,8 +139,8 @@ public class Network implements INetwork, IEnemy{
     }
     
     @Override
-    public void UpdateEnemyField(int x, int y, PlayerField playingfield){
-        String msg = "{ \"type\": \"5\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"playerField\": \""+playingfield.name()+"\" }";
+    public void UpdateEnemyField(int x, int y, FieldStatus status){
+        String msg = "{ \"type\": \"5\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"status\": \""+status.name()+"\" }";
         writer.sendMessage(msg);
     }
 
