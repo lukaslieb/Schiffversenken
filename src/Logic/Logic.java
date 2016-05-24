@@ -172,4 +172,9 @@ public class Logic implements ILogic,ILogicEnemy{
             PlayingFiled.gameOver(false);
         }
     }
+
+    @Override
+    public void setFirstPlayer(boolean firstPlayer) {
+        AmZug = firstPlayer;
+    }
 }

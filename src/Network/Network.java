@@ -12,6 +12,7 @@ import java.net.Socket;
 import javax.swing.JDialog;
 import org.json.JSONObject;
 import Datatypes.FieldStatus;
+import Datatypes.PlayerField;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -122,10 +123,22 @@ public class Network implements INetwork, IEnemy{
         String msg = "{ \"type\": \"3\", \"win\": \""+win+"\" }";
         writer.sendMessage(msg);
     }
+    
+    @Override
+    public void sendFirstPlayer(boolean firstPlayer){
+        String msg = "{ \"type\": \"4\", \"firstPlayer\": \""+firstPlayer+"\" }";
+        writer.sendMessage(msg);
+    }
+    
+    @Override
+    public void UpdateEnemyField(int x, int y, PlayerField playingfield){
+        String msg = "{ \"type\": \"5\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"playerField\": \""+playingfield.name()+"\" }";
+        writer.sendMessage(msg);
+    }
 
     @Override
     public void comWithEnemy(String message) {
-        String msg = "{ \"type\": \"4\", \"message\": \""+message+"\" }";
+        String msg = "{ \"type\": \"6\", \"message\": \""+message+"\" }";
         writer.sendMessage(msg);
     }
     
@@ -136,12 +149,13 @@ public class Network implements INetwork, IEnemy{
         int y;
         String msg;
         boolean win;
+        boolean firstPlayer;
         FieldStatus status;
+        PlayerField playingfield;
         switch(obj.getInt("type")){
             case 1:
                 x = obj.getInt("x");
                 y = obj.getInt("y");
-                System.out.println(x+", "+y);
                 status = logic.shootFromEnemy(x, y);
                 msg = "{ \"type\": \"2\", \"x\": \""+x+"\",\"y\": \""+y+"\",\"status\": \""+status.name()+"\" }";
                 writer.sendMessage(msg);
@@ -157,6 +171,16 @@ public class Network implements INetwork, IEnemy{
                 logic.gameWin(win);
                 break;
             case 4:
+                firstPlayer = obj.getBoolean("firstPlayer");
+                logic.setFirstPlayer(firstPlayer);
+                break;
+            case 5:
+                x = obj.getInt("x");
+                y = obj.getInt("y");
+                playingfield = PlayerField.getEnumState(obj.getString("playerField"));
+                logic.UpdateField(x, y, playingfield);
+                break;
+            case 6:
                 System.out.println(obj.getString("message"));
                 break;
             default:

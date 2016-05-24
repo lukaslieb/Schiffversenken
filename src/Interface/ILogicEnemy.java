@@ -33,7 +33,7 @@ public interface ILogicEnemy {
     
     /**
     * This function send wether the reciever is startplayer or not
-    * @param firstPlayer = true="reciever is first player", false=reciever does not strat
+    * @param firstPlayer = true="reciever is first player", false=reciever does not start
     */
     void setFirstPlayer(boolean firstPlayer);
     

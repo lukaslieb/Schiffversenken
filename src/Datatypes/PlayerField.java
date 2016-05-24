@@ -12,4 +12,13 @@ package Datatypes;
 public enum PlayerField {
     ENEMY,
     OWN;
+    
+    public static PlayerField getEnumState(String playingfield) {
+        switch (playingfield) {
+            case "ENEMY":
+                return ENEMY;
+            case "OWN":
+                return OWN;
+        }
+    }
 }
