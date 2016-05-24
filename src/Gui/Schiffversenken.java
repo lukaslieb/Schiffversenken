@@ -179,18 +179,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         if (e.getSource() == mNetHost) {
             NetworkHost dialog = new NetworkHost(this, "Warte auf Spieler");
-            /*ServerThread server = new ServerThread(dialog);
 
-            server.start();
-
-            dialog.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    server.serverExit();
-                    dialog.setVisible(false);
-                }
-            });
-             */
             network = new Network();
 
             network.startServer(dialog);
@@ -206,25 +195,15 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             dialog.setVisible(true);
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
-            network.sendFirstPlayer(FirstPlayer.getFirstPlayer());
+            
+            //define starting Player (true = local, false = enemy)
+            boolean firstPlayer = FirstPlayer.getFirstPlayer();//this function returns true if the local player starts
+            network.sendFirstPlayer(!firstPlayer);
+            logic.setFirstPlayer(firstPlayer);
         }
         if (e.getSource() == mNetClient) {
-            //String hostname = "localhost";//JOptionPane.showInputDialog(null, "Host Adresse: ", "localhost");
-            //int eingabe = JOptionPane.showConfirmDialog(null, "Suche Server...", "Suche Server...", JOptionPane.CANCEL_OPTION);
 
-            //if (!hostname.equals("")) {
             NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
-            /*ClientThread client = new ClientThread(hostname, dialog);
-
-            client.start();
-
-            dialog.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    client.exitClient();
-                    dialog.setVisible(false);
-                }
-            });*/
 
             network = new Network();
             network.startClient(dialog);
@@ -240,7 +219,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             dialog.setVisible(true);
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
-            //}
         }
     }
 

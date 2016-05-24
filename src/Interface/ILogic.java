@@ -31,4 +31,10 @@ public interface ILogic {
     boolean setPreviewSip(int x, int y, ShipAlignment direction, int lenght);
     
     void SetNetworkconnection(IEnemy Network);
+    
+    /**
+    * This function send wether the reciever is startplayer or not
+    * @param firstPlayer = true="reciever is first player", false=reciever does not start
+    */
+    void setFirstPlayer(boolean firstPlayer);
 }

@@ -19,6 +19,8 @@ public enum PlayerField {
                 return ENEMY;
             case "OWN":
                 return OWN;
+            default:
+                return ENEMY;
         }
     }
 }
