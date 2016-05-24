@@ -260,7 +260,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3 && ownField(e)) { //rechte maustaste im eigenen Feld
             sa = ShipAlignment.invertAlignment(sa);
-            Schiffversenken.soundWater();
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
