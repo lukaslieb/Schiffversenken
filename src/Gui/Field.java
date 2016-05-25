@@ -4,6 +4,14 @@ package Gui;
 import Datatypes.FieldStatus;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.border.LineBorder;import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Color;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 
 /*
@@ -21,9 +29,11 @@ public class Field {
     private int x;
     private int y;
     private ImageIcon img = new ImageIcon();
+    private Color color = new Color(50,50,80);
 
     public Field(int x, int y) {
         this.button = new JButton();
+        button.setBorder(new LineBorder(color, 1));
         setImg(this.button, FieldStatus.UNUSED);
         this.x = x;
         this.y = y;

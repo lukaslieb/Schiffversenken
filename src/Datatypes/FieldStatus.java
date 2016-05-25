@@ -127,6 +127,7 @@ public enum FieldStatus {
                 break;
             case SHOOT:
                 pic="/Gui/Picture/shoot.jpg";
+                break;
             case COLLISION:
                 pic="/Gui/Picture/destroyed.jpg";
             break;

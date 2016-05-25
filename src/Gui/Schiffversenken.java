@@ -40,7 +40,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import java.applet.AudioClip;
+import java.io.InputStream;
 import java.net.URL;
+import sun.audio.AudioData;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
 
 /**
  *
@@ -82,7 +87,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     private JLabel rightTopLabel = new JLabel();
     private boolean holdLeftMouse;
     private boolean preview;
-    
+
     private AudioClip placeShip;
     private static AudioClip hit;
     private static AudioClip water;
@@ -97,6 +102,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Schiffversenken() {
         super();
+        //music();
         this.fieldSize = Constant.fieldSize;
         this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -170,24 +176,43 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         setVisible(true);
     }
-    
-    public  void soundPlaceShip() {
+
+    public void soundPlaceShip() {
         URL urlLine = getClass().getResource("/Gui/Music/placeShip.wav");
         placeShip = Applet.newAudioClip(urlLine);
         placeShip.play();
     }
-    
-    public static  void soundHit() {
+
+    public static void soundHit() {
         URL urlLine = Schiffversenken.class.getResource("/Gui/Music/hit.wav");
         hit = Applet.newAudioClip(urlLine);
         hit.play();
     }
-    
-    public static  void soundWater() {
+
+    public static void soundWater() {
         URL urlLine = Schiffversenken.class.getResource("/Gui/Music/water.wav");
         water = Applet.newAudioClip(urlLine);
         water.play();
     }
+
+    /*public void music() {
+        AudioPlayer MGP = AudioPlayer.player;
+        AudioStream BGM;
+        AudioData musicData;
+        ContinuousAudioDataStream loop = null;
+        try {
+            InputStream inputStream = Schiffversenken.class.getResourceAsStream("/Gui/Music/bgmusic.wav");
+            BGM = new AudioStream(inputStream);
+            AudioPlayer.player.start(BGM);
+            //System.out.println(BGM.getData());
+            //musicData = BGM.getData();
+            /*System.out.println(musicData);
+            loop = new ContinuousAudioDataStream(musicData);
+            AudioPlayer.player.start(loop);
+        } catch (IOException error) {
+            System.out.println(error.getMessage());
+        }
+    }*/
 
     public void setLogic(ILogic logic) {
         this.logic = logic;
@@ -222,7 +247,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             dialog.setVisible(true);
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
-            
+
             network.getServerStatus(); //wait until the network is connected
             //define starting Player (true = local, false = enemy)
             boolean firstPlayer = FirstPlayer.getFirstPlayer();//this function returns true if the local player starts
@@ -246,15 +271,13 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
-            
+
             dialog.setVisible(true);
-            
+
             network.getServerStatus();
             dialog.setVisible(false);
         }
     }
-
-  
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -272,11 +295,16 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             actualShipSize = Constant.ships[shipNumbers];
             logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
         }
+        if(!setShips && !ownField(e) && e.getComponent().getBackground()==Color.white){
+            getClickedFieldRight(e).setImg(getClickedFieldRight(e).getButton(), FieldStatus.SHOOT);
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        if(!setShips && !ownField(e) && e.getComponent().getBackground()==Color.white){
+            getClickedFieldRight(e).setImg(getClickedFieldRight(e).getButton(), FieldStatus.UNUSED);
+        }
     }
 
     @Override
@@ -301,7 +329,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
                             //logic.shoot(row, col);
                         }
                     }
-                    if (fieldRight[col][row].getButton() == e.getComponent()) {
+                    if (fieldRight[col][row].getButton() == e.getComponent() && fieldRight[col] [row].getButton().getBackground()==Color.white) {
                         if (!setShips) {
                             logic.shoot(col, row);
                         }
