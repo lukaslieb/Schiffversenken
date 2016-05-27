@@ -42,10 +42,7 @@ import javax.swing.ImageIcon;
 import java.applet.AudioClip;
 import java.io.InputStream;
 import java.net.URL;
-import sun.audio.AudioData;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import sun.audio.ContinuousAudioDataStream;
+
 
 /**
  *
