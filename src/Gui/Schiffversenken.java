@@ -102,7 +102,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Schiffversenken() {
         super();
-        //music();
         this.fieldSize = Constant.fieldSize;
         this.sa = ShipAlignment.HORIZONTAL;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -195,25 +194,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         water.play();
     }
 
-    /*public void music() {
-        AudioPlayer MGP = AudioPlayer.player;
-        AudioStream BGM;
-        AudioData musicData;
-        ContinuousAudioDataStream loop = null;
-        try {
-            InputStream inputStream = Schiffversenken.class.getResourceAsStream("/Gui/Music/bgmusic.wav");
-            BGM = new AudioStream(inputStream);
-            AudioPlayer.player.start(BGM);
-            //System.out.println(BGM.getData());
-            //musicData = BGM.getData();
-            /*System.out.println(musicData);
-            loop = new ContinuousAudioDataStream(musicData);
-            AudioPlayer.player.start(loop);
-        } catch (IOException error) {
-            System.out.println(error.getMessage());
-        }
-    }*/
-
     public void setLogic(ILogic logic) {
         this.logic = logic;
     }
@@ -281,28 +261,41 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3 && ownField(e)) { //rechte maustaste im eigenen Feld
-            sa = ShipAlignment.invertAlignment(sa);
-            actualShipSize = Constant.ships[shipNumbers];
-            logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
+        boolean myField = ownField(e);
+        if (myField) {
+            int xl = getClickedFieldLeft(e).getX();
+            int yl = getClickedFieldLeft(e).getY();
+
+            if (e.getButton() == MouseEvent.BUTTON3) { //rechte maustaste im eigenen Feld
+                sa = ShipAlignment.invertAlignment(sa);
+                actualShipSize = Constant.ships[shipNumbers];
+                logic.setPreviewSip(xl, yl, sa, actualShipSize);
+            }
         }
 
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (setShips && ownField(e) && holdLeftMouse == false) {
-            actualShipSize = Constant.ships[shipNumbers];
-            logic.setPreviewSip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, actualShipSize);
+        boolean myField = ownField(e);
+        if (myField) {
+            int xl = getClickedFieldLeft(e).getX();
+            int yl = getClickedFieldLeft(e).getY();
+
+            if (setShips && myField && holdLeftMouse == false) {
+                actualShipSize = Constant.ships[shipNumbers];
+                logic.setPreviewSip(xl, yl, sa, actualShipSize);
+            }
         }
-        if(!setShips && !ownField(e) && e.getComponent().getBackground()==Color.white){
+
+        if (!setShips && !myField && e.getComponent().getBackground() == Color.white) {
             getClickedFieldRight(e).setImg(getClickedFieldRight(e).getButton(), FieldStatus.SHOOT);
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if(!setShips && !ownField(e) && e.getComponent().getBackground()==Color.white){
+        if (!setShips && !ownField(e) && e.getComponent().getBackground() == Color.white) {
             getClickedFieldRight(e).setImg(getClickedFieldRight(e).getButton(), FieldStatus.UNUSED);
         }
     }
@@ -310,45 +303,43 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
     @Override
     public void mouseReleased(MouseEvent e) {
         holdLeftMouse = false;
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            for (int row = 0; row < fieldSize; row++) {
-                for (int col = 0; col < fieldSize; col++) {
-                    if (fieldLeft[col][row].getButton() == e.getComponent()) {
-                        if (setShips) {
-                            //JOptionPane.showMessageDialog(this, col + "-" + row + "-" + sa +"-"+Constant.ships[shipNumbers]);
-                            boolean nocollision = logic.setShip(col, row, sa, Constant.ships[shipNumbers]);
-                            if (nocollision) { //wenn keine kollision besteht
-                                shipNumbers++;
-                                this.soundPlaceShip();
-                                if (shipNumbers >= Constant.ships.length) {
-                                    setShips = false;
-                                    //placementOptions.setVisible(false);
-                                }
-                            }
-                        } else {
-                            //logic.shoot(row, col);
-                        }
-                    }
-                    if (fieldRight[col][row].getButton() == e.getComponent() && fieldRight[col] [row].getButton().getBackground()==Color.white) {
-                        if (!setShips) {
-                            logic.shoot(col, row);
-                        }
+        boolean myField = ownField(e);
+        if (myField) {
+            int xl = getClickedFieldLeft(e).getX();
+            int yl = getClickedFieldLeft(e).getY();
+
+            if (e.getButton() == MouseEvent.BUTTON1 && setShips) {
+                boolean nocollision = logic.setShip(xl, yl, sa, Constant.ships[shipNumbers]);
+                if (nocollision) { //wenn keine kollision besteht
+                    shipNumbers++;
+                    this.soundPlaceShip();
+                    if (shipNumbers >= Constant.ships.length) {
+                        setShips = false;
                     }
                 }
-
+            }
+        }
+        else if(!myField && !setShips){
+            int xr = getClickedFieldRight(e).getX();
+            int yr = getClickedFieldRight(e).getY();
+            
+            if(e.getButton() == MouseEvent.BUTTON1 && e.getComponent().getBackground() == Color.white){
+                logic.shoot(xr, yr);
             }
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e
+    ) {
         if (e.getButton() == MouseEvent.BUTTON1 && ownField(e) && setShips) {
             holdLeftMouse = true;
         }
     }
 
     @Override
-    public void myTurn(boolean myTurn) {
+    public void myTurn(boolean myTurn
+    ) {
         if (myTurn) {
             leftTopLabel.setIcon(t1MyTurn);
             rightTopLabel.setIcon(t2);
