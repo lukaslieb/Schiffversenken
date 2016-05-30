@@ -229,18 +229,18 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         }
         if (e.getSource() == mNetClient) {
 
-            NetworkSearchHost dialog = new NetworkSearchHost(this, "Suche Host");
+            NetworkSearchHost dialog = null;//= new NetworkSearchHost(this, "Suche Host");
 
             network = new Network();
             network.startClient(dialog);
 
-            dialog.addActionListener(new ActionListener() {
+            /*dialog.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     network.stopClient();
                     dialog.setVisible(false);
                 }
-            });
+            });*/
 
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);

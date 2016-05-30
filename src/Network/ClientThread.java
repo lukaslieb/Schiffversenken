@@ -32,7 +32,7 @@ public class ClientThread extends Thread{
     
     public void exitClient(){
         exit = true;
-        dialog.setVisible(false);
+        //dialog.setVisible(false);
     }
     
     @Override
@@ -52,7 +52,7 @@ public class ClientThread extends Thread{
             }
             if (connected){
                 while(!dialog.isShowing());
-                dialog.setVisible(false);
+                //dialog.setVisible(false);
             }
         }
         catch(Exception ex){
