@@ -27,7 +27,7 @@ public class Logic implements ILogic,ILogicEnemy{
     private ArrayList<Ship> Ships = new ArrayList<Ship>();
     private Ship previewShip;
     private FieldStatus[][] WaterField = new FieldStatus[Constant.fieldSize][Constant.fieldSize]; 
-    boolean AmZug = true;
+    boolean AmZug = false;
     
     public Logic(){
         //Init
@@ -78,27 +78,30 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public boolean setPreviewSip(int x, int y, ShipAlignment direction, int lenght){
-        if(previewShip != null){        //if already a ship exists delete the existing
-            for(ShipFields SF : previewShip.returnShipFields()){
-                //Delet the Preview Ship
-                PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, FieldStatus.UNUSED);
-            }
-            for(Ship s : Ships){
-                RedrawWholeShip(s);
-            }
-        }
-        //TODO draw new ship
-        previewShip = new Ship(x,y,direction,lenght);
-        previewShip.setToPreview();
-        for(ShipFields SF : previewShip.returnShipFields()){
-            for(Ship s : Ships){
-                if(s.isCollision(SF.getX(), SF.getY())){
-                    SF.setStatus(FieldStatus.COLLISION); //TODO test wether it really changes the ship class!!!!
+        if(ConnectionsDefined()){
+            if(previewShip != null){        //if already a ship exists delete the existing
+                for(ShipFields SF : previewShip.returnShipFields()){
+                    //Delet the Preview Ship
+                    PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, FieldStatus.UNUSED);
+                }
+                for(Ship s : Ships){
+                    RedrawWholeShip(s);
                 }
             }
+            //TODO draw new ship
+            previewShip = new Ship(x,y,direction,lenght);
+            previewShip.setToPreview();
+            for(ShipFields SF : previewShip.returnShipFields()){
+                for(Ship s : Ships){
+                    if(s.isCollision(SF.getX(), SF.getY())){
+                        SF.setStatus(FieldStatus.COLLISION); //TODO test wether it really changes the ship class!!!!
+                    }
+                }
+            }
+            RedrawWholeShip(previewShip);
+            return true;
         }
-        RedrawWholeShip(previewShip);
-        return true;
+        return false;
     }
     
     @Override
@@ -136,20 +139,23 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public boolean setShip(int x, int y, ShipAlignment direction, int lenght){
-        Ship newShip = new Ship(x, y, direction, lenght);
-        //When the Ships are not empty do collision detection
-        if(!Ships.isEmpty()){
-            for(ShipFields SF : newShip.returnShipFields()){
-                for(Ship s : Ships){
-                    if(s.isCollision(SF.getX(), SF.getY())){
-                        return false; //Collison detected
+        if(ConnectionsDefined()){
+            Ship newShip = new Ship(x, y, direction, lenght);
+            //When the Ships are not empty do collision detection
+            if(!Ships.isEmpty()){
+                for(ShipFields SF : newShip.returnShipFields()){
+                    for(Ship s : Ships){
+                        if(s.isCollision(SF.getX(), SF.getY())){
+                            return false; //Collison detected
+                        }
                     }
                 }
             }
+            RedrawWholeShip(newShip);
+            Ships.add(newShip); //Add ship to the list
+            return true;
         }
-        RedrawWholeShip(newShip);
-        Ships.add(newShip); //Add ship to the list
-        return true;
+        return false;
     }
     
     @Override
@@ -232,5 +238,16 @@ public class Logic implements ILogic,ILogicEnemy{
     public void setFirstPlayer(boolean firstPlayer) {
         AmZug = firstPlayer;
         PlayingFiled.myTurn(AmZug);
+    }
+    
+    private boolean ConnectionsDefined(){
+        boolean isconnected = true;
+        if(Network == null){
+            isconnected = false;
+        }
+        if(PlayingFiled == null){
+            isconnected = false;
+        }
+        return isconnected;
     }
 }
