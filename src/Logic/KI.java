@@ -69,6 +69,7 @@ public class KI extends Logic implements IEnemy{
                 if(FieldStatus.ALLREADYHIT != status){
                     if(status == FieldStatus.DESTROYED){
                         //UpdateWholeShip(s);
+                        RedrawEnemyShip(s);
                         TestWin();
                     }
                     //PlayingFiled.updateField(x, y, PlayerField.OWN, status);
@@ -86,10 +87,25 @@ public class KI extends Logic implements IEnemy{
         return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
     }
     private void randomShip (){
+        for(int size : Datatypes.Constant.ships){
+            boolean Shipset = false;
+            while(!Shipset){
+                int x,y;
+                x = rand.nextInt(10);
+                y = rand.nextInt(10);
+                boolean ausrichtung = rand.nextBoolean();
+                ShipAlignment SA = ShipAlignment.HORIZONTAL;
+                if(ausrichtung){
+                    SA = ShipAlignment.VERTICAL;
+                }
+                Shipset = this.setShip(x, y, SA, size);
+            }
+        }
+        /*
         this.setShip(0, 0, ShipAlignment.VERTICAL, 4);
         this.setShip(2, 0, ShipAlignment.VERTICAL, 3);
         this.setShip(4, 0, ShipAlignment.VERTICAL, 2);
-        this.setShip(6, 0, ShipAlignment.VERTICAL, 2);
+        this.setShip(6, 0, ShipAlignment.VERTICAL, 2);*/
     }
     
     @Override
@@ -110,6 +126,12 @@ public class KI extends Logic implements IEnemy{
         x = rand.nextInt(10);
         y = rand.nextInt(10);        
         shootReply(x,y,logic.shootFromEnemy(x, y));
+    }
+    
+    private void RedrawEnemyShip(Ship s){
+        for(ShipFields SF : s.returnShipFields()){
+            logic.UpdateField(SF.getX(), SF.getY(), SF.getStatus());
+        }
     }
     
     private void TestWin(){
