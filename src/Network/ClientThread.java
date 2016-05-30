@@ -51,7 +51,7 @@ public class ClientThread extends Thread{
                 }
             }
             if (connected){
-                while(!dialog.isShowing());
+                //while(!dialog.isShowing());
                 //dialog.setVisible(false);
             }
         }
