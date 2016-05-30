@@ -245,10 +245,10 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             network.setLogic((Logic) logic);
             logic.SetNetworkconnection((Network) network);
 
-            dialog.setVisible(true);
+            //dialog.setVisible(true); //TODO: Cancel Host Search
 
             network.getServerStatus();
-            dialog.setVisible(false);
+            //dialog.setVisible(false);
         }
     }
 
