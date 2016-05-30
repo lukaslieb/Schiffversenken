@@ -27,7 +27,7 @@ public class Logic implements ILogic,ILogicEnemy{
     private ArrayList<Ship> Ships = new ArrayList<Ship>();
     private Ship previewShip;
     private FieldStatus[][] WaterField = new FieldStatus[Constant.fieldSize][Constant.fieldSize]; 
-    boolean AmZug = false;
+    boolean AmZug = true;
     
     public Logic(){
         //Init
@@ -197,6 +197,7 @@ public class Logic implements ILogic,ILogicEnemy{
                 if(FieldStatus.ALLREADYHIT != status){
                     if(status == FieldStatus.DESTROYED){
                         RedrawWholeShip(s);
+                        RedrawEnemyShip(s);
                         TestWin();
                     }
                     PlayingFiled.updateField(x, y, PlayerField.OWN, status);
@@ -219,6 +220,12 @@ public class Logic implements ILogic,ILogicEnemy{
         for(ShipFields SF : s.returnShipFields()){
             //TODO send datas thorugh network in new function
             PlayingFiled.updateField(SF.getX(), SF.getY(), PlayerField.OWN, SF.getStatus());
+        }
+    }
+    
+    private void RedrawEnemyShip(Ship s){
+        for(ShipFields SF : s.returnShipFields()){
+            Network.UpdateEnemyField(SF.getX(), SF.getY(), SF.getStatus());
         }
     }
    
