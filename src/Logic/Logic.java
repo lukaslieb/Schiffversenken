@@ -67,6 +67,7 @@ public class Logic implements ILogic,ILogicEnemy{
     }
 
     public void setAmZug(boolean AmZug) {
+        PlayingFiled.myTurn(AmZug);
         this.AmZug = AmZug;
     }
     
@@ -107,13 +108,11 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public void UpdateField(int x, int y, FieldStatus status){
         if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
-            AmZug = true;
-            PlayingFiled.myTurn(AmZug);
+            setAmZug(true);
         }
         else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
             AmZug = true;
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
-            PlayingFiled.myTurn(AmZug);
             
         }
         else{
@@ -123,8 +122,7 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public void setReady(){
-        AmZug = true;
-        PlayingFiled.myTurn(AmZug);
+        setAmZug(true);
     }
     
     @Override
@@ -163,7 +161,6 @@ public class Logic implements ILogic,ILogicEnemy{
         if(isAmZug()){
             setAmZug(false);
             Network.sendMoveToEnemy(x, y);
-            PlayingFiled.myTurn(AmZug);
             return true;
         }
         return false;
@@ -209,7 +206,6 @@ public class Logic implements ILogic,ILogicEnemy{
             WaterField[x][y] = FieldStatus.WATER;
             accepted = true;
             PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
-            PlayingFiled.myTurn(AmZug);
             setAmZug(true);                //if he hits water his turn ends and you starts
             return FieldStatus.WATER;    //return new Status
         }
@@ -243,8 +239,7 @@ public class Logic implements ILogic,ILogicEnemy{
 
     @Override
     public void setFirstPlayer(boolean firstPlayer) {
-        AmZug = firstPlayer;
-        PlayingFiled.myTurn(AmZug);
+        setAmZug(firstPlayer);
     }
     
     private boolean ConnectionsDefined(){
