@@ -138,4 +138,12 @@ public class KI extends Logic implements IEnemy{
     public void sendGameWin(boolean win){
         
     }
+    @Override
+    public void sendFirstPlayer(boolean firstPlayer){
+        
+    }
+    @Override
+    public void UpdateEnemyField(int x, int y, FieldStatus status){
+        
+    }
 }
