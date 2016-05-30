@@ -37,6 +37,40 @@ public class Logic implements ILogic,ILogicEnemy{
             }
         }
     }
+
+    public IEnemy getNetwork() {
+        return Network;
+    }
+
+    public void setNetwork(IEnemy Network) {
+        this.Network = Network;
+    }
+
+    public ArrayList<Ship> getShips() {
+        return Ships;
+    }
+
+    public void setShips(ArrayList<Ship> Ships) {
+        this.Ships = Ships;
+    }
+
+    public FieldStatus[][] getWaterField() {
+        return WaterField;
+    }
+
+    public void setWaterField(FieldStatus[][] WaterField) {
+        this.WaterField = WaterField;
+    }
+
+    public boolean isAmZug() {
+        return AmZug;
+    }
+
+    public void setAmZug(boolean AmZug) {
+        this.AmZug = AmZug;
+    }
+    
+    
     
     public void setPlayField(IPlayingField PlayingField){
         this.PlayingFiled = PlayingField;
@@ -103,7 +137,7 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public boolean setShip(int x, int y, ShipAlignment direction, int lenght){
         Ship newShip = new Ship(x, y, direction, lenght);
-        //When the Sips are not empty do collision detection
+        //When the Ships are not empty do collision detection
         if(!Ships.isEmpty()){
             for(ShipFields SF : newShip.returnShipFields()){
                 for(Ship s : Ships){
@@ -120,8 +154,8 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public boolean shoot(int x, int y){
-        if(AmZug){
-            AmZug = false;
+        if(isAmZug()){
+            setAmZug(false);
             Network.sendMoveToEnemy(x, y);
             PlayingFiled.myTurn(AmZug);
             return true;
@@ -132,11 +166,19 @@ public class Logic implements ILogic,ILogicEnemy{
     @Override
     public void shootReply(int x, int y, FieldStatus status){
         UpdateField(x,y,status);
-        if(status==FieldStatus.HIT || status==FieldStatus.DESTROYED){
+        if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
             Schiffversenken.soundHit();
+            setAmZug(true);
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
         }
-        if(status==FieldStatus.WATER){
+        else if(status==FieldStatus.WATER){
             Schiffversenken.soundWater();
+        }
+        else if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
+            setAmZug(true);
+        }
+        else{
+            PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
         }
     }
     
@@ -160,8 +202,8 @@ public class Logic implements ILogic,ILogicEnemy{
             WaterField[x][y] = FieldStatus.WATER;
             accepted = true;
             PlayingFiled.updateField(x, y, PlayerField.OWN, FieldStatus.WATER);
-            AmZug = true;                //if he hits water his turn ends and you starts
             PlayingFiled.myTurn(AmZug);
+            setAmZug(true);                //if he hits water his turn ends and you starts
             return FieldStatus.WATER;    //return new Status
         }
         return FieldStatus.ALLREADYHIT; //already hit means not accepted shot
