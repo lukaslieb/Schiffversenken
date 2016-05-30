@@ -13,10 +13,7 @@ import Interface.ILogic;
 import Interface.INetwork;
 import Interface.IPlayingField;
 import Logic.FirstPlayer;
-import Logic.Logic;
-import Network.Network;
 import java.applet.Applet;
-import java.awt.BorderLayout;
 import Logic.KI;
 import Logic.Logic;
 import Network.Network;
@@ -26,14 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,7 +33,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import java.applet.AudioClip;
-import java.io.InputStream;
 import java.net.URL;
 
 
@@ -153,7 +141,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
         rightPanel.setBackground(Color.black);
         rightTopPanel.setBackground(Color.black);
         leftTopPanel.setBackground(Color.black);
-        //leftTopPanel.add(Titel1);
         leftTopLabel.setIcon(t1);
         rightTopLabel.setIcon(t2);
         leftTopPanel.add(leftTopLabel);
@@ -210,7 +197,6 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
             JOptionPane.showMessageDialog(this, "Copyright 2015 Hochschule Luzern, Technik & Architektur");
         }
         if (e.getSource() == mNewLocal) {
-            JOptionPane.showMessageDialog(this, "Not implementet right now");
             ki = new KI();
             logic.SetNetworkconnection(ki);
             ki.setLogic((Logic)logic);
@@ -450,9 +436,7 @@ public class Schiffversenken extends JFrame implements ActionListener, MouseList
 
     public Color checkCollision(MouseEvent e, int size) {
         Color c;
-        //boolean checkCollision = logic.setShip(getClickedFieldLeft(e).getX(), getClickedFieldLeft(e).getY(), sa, size);
         boolean checkCollision = true;
-        //System.out.println(checkCollision);
         if (!checkCollision) {
             c = Color.red;
         } else {
