@@ -28,6 +28,14 @@ public class Logic implements ILogic,ILogicEnemy{
     private Ship previewShip;
     private FieldStatus[][] WaterField = new FieldStatus[Constant.fieldSize][Constant.fieldSize]; 
     boolean AmZug = true;
+    boolean gameOver = false;
+
+    public void setGameOver(boolean gameOver) {
+        if(gameOver){
+            AmZug = false;
+        }
+        this.gameOver = gameOver;
+    }
     
     public Logic(){
         //Init
@@ -67,8 +75,10 @@ public class Logic implements ILogic,ILogicEnemy{
     }
 
     public void setAmZug(boolean AmZug) {
-        PlayingFiled.myTurn(AmZug);
-        this.AmZug = AmZug;
+        if(!gameOver){
+            PlayingFiled.myTurn(AmZug);
+            this.AmZug = AmZug;
+        }
     }
     
     
@@ -111,7 +121,7 @@ public class Logic implements ILogic,ILogicEnemy{
             setAmZug(true);
         }
         else if(status == FieldStatus.HIT || status == FieldStatus.DESTROYED){
-            AmZug = true;
+            setAmZug(true);
             PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
             
         }
@@ -127,6 +137,7 @@ public class Logic implements ILogic,ILogicEnemy{
     
     @Override
     public void gameWin(boolean win){
+        setGameOver(true);
         PlayingFiled.gameOver(win);
     }
     
@@ -232,6 +243,7 @@ public class Logic implements ILogic,ILogicEnemy{
                 fertig = false;
         }
         if(fertig){
+            setGameOver(true);
             Network.sendGameWin(true);
             PlayingFiled.gameOver(false);
         }
