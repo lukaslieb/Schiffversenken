@@ -207,6 +207,8 @@ public class KI extends Logic implements IEnemy{
                 }
             }
             else{
+                x=-1;
+                y=-1;
                 ShipAlignment SA = ShipAlignment.HORIZONTAL;
                 for(HittedField HF : HittedFields){
                     if(x == HF.x){
