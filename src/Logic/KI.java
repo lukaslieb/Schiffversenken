@@ -8,9 +8,8 @@ package Logic;
 import Datatypes.FieldStatus;
 import Datatypes.ShipAlignment;
 import Interface.IEnemy;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
 /**
  *
@@ -20,6 +19,8 @@ public class KI extends Logic implements IEnemy{
     
     private Random rand;
     private Logic logic;
+    private ArrayList<HittedField> HittedFields = new ArrayList<HittedField>();
+    private ArrayList<Ship> DestroyedShips = new ArrayList<Ship>();
     
     
     public KI(){
@@ -113,19 +114,141 @@ public class KI extends Logic implements IEnemy{
         if(status == FieldStatus.ALLREADYHIT){  //when the soot wasn't accepted
             setAmZug(true);
         }
-        else if(status == FieldStatus.HIT ||status == FieldStatus.DESTROYED){
+        else if(status == FieldStatus.HIT){
+            HittedField HF = new HittedField(x, y);
+            HittedFields.add(HF);
+            
             setAmZug(true);
             //PlayingFiled.updateField(x, y, PlayerField.ENEMY, status);
         }
-        else{
+        else if(status == FieldStatus.DESTROYED){
+            HittedField HFn = new HittedField(x, y);
+            HittedFields.add(HFn);
+            int xc=10;
+            int yc=10;
+            ShipAlignment SA = ShipAlignment.HORIZONTAL;
+            for(HittedField HF : HittedFields){
+                if(xc == HF.x){
+                    SA = ShipAlignment.VERTICAL;
+                }
+                if(xc > HF.x){
+                    xc = HF.x;
+                }
+                if(yc > HF.y){
+                    yc = HF.y;
+                }
+            }
+            DestroyedShips.add(new Ship(xc,yc,SA,HittedFields.size()));
+            
+            HittedFields.clear();
+            
+            setAmZug(true);
         }
     }
     
     public void randomShoot(){
         int x,y;
-        x = rand.nextInt(10);
-        y = rand.nextInt(10);        
-        shootReply(x,y,logic.shootFromEnemy(x, y));
+        x=0;
+        y=0;
+        if(HittedFields.isEmpty()){
+            x = rand.nextInt(10);
+            y = rand.nextInt(10);      
+        }
+        else if(HittedFields.size() == 1){
+                x = HittedFields.get(0).x;
+                y = HittedFields.get(0).y;
+            if(!HittedFields.get(0).north){
+                HittedFields.get(0).north = true;
+                y = HittedFields.get(0).y-1;
+            }
+            else if(!HittedFields.get(0).east){
+                HittedFields.get(0).east = true;
+                x = HittedFields.get(0).x+1;
+            }
+            else if(!HittedFields.get(0).south){
+                HittedFields.get(0).south = true;
+                y = HittedFields.get(0).y+1;
+            }
+            else if(!HittedFields.get(0).west){
+                HittedFields.get(0).west = true;
+                x = HittedFields.get(0).x-1;
+            }
+            else{
+                System.out.println("FEHLER ;P");
+            }
+        }
+        else{
+            boolean wechsel = rand.nextBoolean();
+            if(wechsel){
+                x = 10;
+                y = 10;
+                ShipAlignment SA = ShipAlignment.HORIZONTAL;
+                for(HittedField HF : HittedFields){                    
+                    if(x == HF.x){
+                        SA = ShipAlignment.VERTICAL;
+                    }
+                    if(x > HF.x){
+                        x = HF.x;
+                    }
+                    if(y > HF.y){
+                        y = HF.y;
+                    }
+                }
+                
+                if(SA == ShipAlignment.HORIZONTAL){
+                    if(x > 0){
+                        x -= 1;
+                    }
+                }
+                else{
+                    if(y > 0){
+                        y -= 1;
+                    }
+                }
+            }
+            else{
+                ShipAlignment SA = ShipAlignment.HORIZONTAL;
+                for(HittedField HF : HittedFields){
+                    if(x == HF.x){
+                        SA = ShipAlignment.VERTICAL;
+                    }
+                    if(x < HF.x){
+                        x = HF.x;
+                    }
+                    if(y < HF.y){
+                        y = HF.y;
+                    }
+                }
+                
+                if(SA == ShipAlignment.HORIZONTAL){
+                    if(x < Datatypes.Constant.fieldSize-1){
+                        x += 1;
+                    }
+                }
+                else{
+                    if(y < Datatypes.Constant.fieldSize-1){
+                        y += 1;
+                    }
+                }
+            }
+        }
+        if(!DestroyedShips.isEmpty()){
+            boolean nochmal = false;
+            for(Ship s : DestroyedShips){
+                if(s.isCollision(x, y)){
+                    nochmal = true;
+                }
+            }
+            if(nochmal){
+                setAmZug(true);
+            }
+            else{
+                shootReply(x,y,logic.shootFromEnemy(x, y));
+            }
+        }
+        else{
+            shootReply(x,y,logic.shootFromEnemy(x, y));
+        }
     }
     
     private void RedrawEnemyShip(Ship s){
